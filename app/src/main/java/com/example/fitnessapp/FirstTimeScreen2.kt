@@ -43,7 +43,7 @@ fun FirstTimeScreen2()
     }
 }
 
-@Preview(device = "id:pixel_7_pro")
+@Preview(device = "id:pixel_7_pro", backgroundColor = 0xFFF32121)
 @Composable
 fun FirstTimePreview2(){
     FitnessAppTheme {
