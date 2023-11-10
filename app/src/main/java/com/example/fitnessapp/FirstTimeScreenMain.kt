@@ -36,6 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -43,7 +45,7 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FirstTimeScreenMain() {
+fun FirstTimeScreenMain(navController: NavHostController) {
     var currentScreenId by remember {
         mutableIntStateOf(0)
     }
@@ -248,7 +250,7 @@ fun FirstTimeScreenMain() {
             shape = RectangleShape,
             onClick = {
                 if (currentScreenId == screenList.size - 1) {
-                    TODO()
+                    navController.navigate("MainScreen")
                 } else {
                     currentScreenId++
                 }
@@ -264,7 +266,7 @@ fun FirstTimeScreenMain() {
 fun FirstTimeScreenMainPreview() {
     FitnessAppTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            FirstTimeScreenMain()
+            FirstTimeScreenMain(rememberNavController())
         }
     }
 

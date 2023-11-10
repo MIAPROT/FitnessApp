@@ -24,33 +24,25 @@ import com.example.fitnessapp.models.TrainingCardDTO
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 
 @Composable
-fun IndividualExercises()
-{
+fun IndividualExercises() {
     val cardList = remember {
         mutableStateListOf(
-            TrainingCardDTO("Жим ногами", "Квадрицепс, мышцы бедра и ягодиц",
-            R.drawable.testimage, false ), TrainingCardDTO("Подтягивания средний хват", "трапеция, широчайшая", R.drawable.testimage, false )
+            TrainingCardDTO(
+                "Жим ногами", "Квадрицепс, мышцы бедра и ягодиц",
+                R.drawable.testimage, false
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false
+            )
         )
     }
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { /*TODO*/ },
-                    icon = { Icon(Icons.Default.Favorite, null) },
-                    label = { Text(text = "Тренировки") })
-                NavigationBarItem(selected = true, onClick = { /*TODO*/ }, icon = {
-                    Icon(Icons.Default.Star, null)
-                }, label = { Text(text = "История") })
-                NavigationBarItem(selected = false, onClick = { /*TODO*/ }, icon = {
-                    Icon(Icons.Default.AccountCircle, null)
-                }, label = { Text(text = "Профиль") })
-            }
-        })
-    { padding ->
-        CardList(cardList , Modifier.padding(padding).padding(24.dp))
-    }
+
+    CardList(cardList,
+        Modifier
+            .padding(24.dp))
 
 }
 
