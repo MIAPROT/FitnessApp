@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -33,7 +35,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,9 +62,15 @@ fun FirstTimeScreen7() {
                     letterSpacing = 0.1.sp
                 ), color = MaterialTheme.colorScheme.primary
             )
-            OutlinedTextField(value = date.value, /*TODO*/ onValueChange = {newText -> date.value = newText}, trailingIcon = { Image(
-                Icons.Default.Close, contentDescription = null)
-            }, label = { Text(text = "Date")})
+            OutlinedTextField(
+                value = date.value, /*TODO*/
+                onValueChange = { newText -> date.value = newText },
+                trailingIcon = {
+                    IconButton(onClick = {isVisible = true}) {
+                        Icon(Icons.Default.DateRange, contentDescription = null)
+                    }
+                },
+                label = { Text(text = "Date") })
         }
         Button(
             modifier = Modifier
@@ -70,8 +81,20 @@ fun FirstTimeScreen7() {
             Text(text = "ДАЛЕЕ")
         }
         if (isVisible)
-            AlertDialog(onDismissRequest = { isVisible = false }) {
-                DatePicker(state = datePickerState)
+            AlertDialog(onDismissRequest = { isVisible = false },) {
+                Surface {
+                    Column {
+                        DatePicker(state = datePickerState)
+                        Button(onClick = { if (datePickerState.selectedDateMillis != null){
+                            date.value = SimpleDateFormat("MM/dd/yyyy").format(Date(datePickerState.selectedDateMillis!!))
+                            isVisible = false
+                        }
+                        }) {
+                            Text(text = "Ok!")
+                        }
+                    }
+                }
+
             }
     }
 
