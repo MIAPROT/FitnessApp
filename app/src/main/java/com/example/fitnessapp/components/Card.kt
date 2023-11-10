@@ -37,11 +37,20 @@ fun Card(card: TrainingCardDTO) {
         Row() {
             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(text = card.name, style = MaterialTheme.typography.titleMedium)
-                Text(
-                    text = card.description.toString(),
-                    modifier = Modifier.padding(top = 8.dp),
-                    style = MaterialTheme.typography.labelSmall
-                )
+                if(card.showdate) {
+                    Text(
+                        text = card.date.toString(),
+                        modifier = Modifier.padding(top = 8.dp),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+                else{
+                    Text(
+                        text = card.description,
+                        modifier = Modifier.padding(top = 8.dp),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
             }
             Image(
                 painter = painterResource(id = card.image),
