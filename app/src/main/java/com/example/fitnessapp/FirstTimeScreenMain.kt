@@ -209,7 +209,7 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .width(300.dp),
-                    text = "Свои параметры вы можете изменить в личной информации",
+                    text = "Свои параметры вы можете изменить в профиле",
                     style = TextStyle(
                         fontSize = 20.sp,
                         lineHeight = 20.sp,

@@ -149,7 +149,7 @@ fun AccountScreen() {
                             isVisible = false
                         }
                     }) {
-                        Text(text = "Ok!")
+                        Text(text = "Ok")
                     }
                 }
             }
