@@ -2,23 +2,15 @@ package com.example.fitnessapp
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.components.CardList
 import com.example.fitnessapp.models.TrainingCardDTO
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
@@ -29,20 +21,59 @@ fun IndividualExercises() {
         mutableStateListOf(
             TrainingCardDTO(
                 "Жим ногами", "Квадрицепс, мышцы бедра и ягодиц",
-                R.drawable.testimage, false
+                R.drawable.testimage, false, destonation = ""
             ),
             TrainingCardDTO(
                 "Подтягивания средний хват",
                 "трапеция, широчайшая",
                 R.drawable.testimage,
-                false
+                false, destonation = ""
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = ""
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = ""
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = ""
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = ""
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = ""
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = ""
             )
         )
     }
 
-    CardList(cardList,
+    CardList(
+        cardList,
         Modifier
-            .padding(24.dp))
+            .padding(24.dp),
+        rememberNavController()
+    )
 
 }
 

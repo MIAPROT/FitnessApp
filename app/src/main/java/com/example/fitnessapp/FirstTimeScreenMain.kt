@@ -86,7 +86,31 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                 ),
                 color = MaterialTheme.colorScheme.primary
             )
-        }, {
+        },
+        {
+            Column() {
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = "Ваша дата рождения?", style = TextStyle(
+                        fontSize = 20.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight(800),
+                        textAlign = TextAlign.Center,
+                        letterSpacing = 0.1.sp
+                    ), color = MaterialTheme.colorScheme.primary
+                )
+                OutlinedTextField(
+                    value = date.value, /*TODO*/
+                    onValueChange = { newText -> date.value = newText },
+                    trailingIcon = {
+                        IconButton(onClick = { isVisible = true }) {
+                            Icon(Icons.Default.DateRange, contentDescription = null)
+                        }
+                    },
+                    label = { Text(text = "Date") })
+            }
+        },
+        {
             Column() {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -130,7 +154,7 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                             Icons.Default.Close, contentDescription = null
                         )
                     },
-                    label = { Text(text = "Weight") })
+                    label = { Text(text = "Height") })
             }
         },
         {
@@ -196,29 +220,6 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                     color = MaterialTheme.colorScheme.primary
                 )
 
-            }
-        },
-        {
-            Column() {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Ваша дата рождения?", style = TextStyle(
-                        fontSize = 20.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
-                )
-                OutlinedTextField(
-                    value = date.value, /*TODO*/
-                    onValueChange = { newText -> date.value = newText },
-                    trailingIcon = {
-                        IconButton(onClick = { isVisible = true }) {
-                            Icon(Icons.Default.DateRange, contentDescription = null)
-                        }
-                    },
-                    label = { Text(text = "Date") })
             }
         })
     Box(Modifier.fillMaxSize()) {

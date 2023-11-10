@@ -59,25 +59,7 @@ fun TrainingScreen2() {
             )
         )
     }
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { /*TODO*/ },
-                    icon = { Icon(Icons.Default.Favorite, null) },
-                    label = { Text(text = "Тренировки") })
-                NavigationBarItem(selected = true, onClick = { /*TODO*/ }, icon = {
-                    Icon(Icons.Default.Star, null)
-                }, label = { Text(text = "История") })
-                NavigationBarItem(selected = false, onClick = { /*TODO*/ }, icon = {
-                    Icon(Icons.Default.AccountCircle, null)
-                }, label = { Text(text = "Профиль") })
-            }
-        })
-    { padding ->
-        HugeCardList(cardList , Modifier.padding(padding).padding(24.dp))
-    }
+        HugeCardList(cardList , Modifier.padding(24.dp))
 
 
 }
