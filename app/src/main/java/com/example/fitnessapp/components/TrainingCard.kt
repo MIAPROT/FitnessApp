@@ -50,7 +50,7 @@ fun TrainingCard() {
     ) {
 
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            AndroidView(factory = { webView }) { view ->
+            AndroidView(factory = { webView }){ view ->
                 view.loadDataWithBaseURL(
                     "https://www.youtube.com",
                     htmlData,

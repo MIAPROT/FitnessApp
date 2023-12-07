@@ -3,5 +3,5 @@ package com.example.fitnessapp.db
 import org.jetbrains.exposed.sql.Database
 
 object Db{
-    val connenct = Database.connect("jdbc:h2:./myh2file", "org.h2.Driver")
+    val connect = Database.connect("jdbc:h2:/data/data/com.example.fitnessapp/databases/fitnessapp.db", "org.h2.Driver")
 }
