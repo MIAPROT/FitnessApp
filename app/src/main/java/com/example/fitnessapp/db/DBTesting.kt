@@ -22,10 +22,9 @@ fun DBTesting() {
     LaunchedEffect(null ){
         Db
         transaction {
-            // print sql to std-out
 
-            SchemaUtils.create (IdividualExcercises)
-
+            SchemaUtils.create (Muscular_Types, IdividualExcercises, ReadyMadeWorkouts, ReadyMadeWorkouts_Idividual_Exercises, DoneExcercises)
+            Muscular_Type.new { name="Грудь" }
             IdividualExcercise.new{
                 name = "Подъём корпуса на прес"
                 muscular_id = 1
@@ -35,9 +34,8 @@ fun DBTesting() {
 
 
 
-
-            // 'select *' SQL: SELECT Cities.id, Cities.name FROM Cities
-            println("ReadyMadeWorkouts: ${IdividualExcercise.all().forEach{ println(it.name + " " + it.link) }}")
+            println("IdividualExcercise: ${IdividualExcercise.all().forEach{ println(it.name + " " + it.link) }}")
+            println("Muscular_types: ${Muscular_Type.all().forEach{ println(it.name) }}")
 
         }
     }

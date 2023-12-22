@@ -39,6 +39,11 @@ class IdividualExcercise(id: EntityID<Int>) : IntEntity(id){
 
 }
 
+object DoneExcercises: IntIdTable(){
+    val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
+    val individualExcercises = reference("IdividualExcercises", IdividualExcercises)
+}
+
 object ReadyMadeWorkouts_Idividual_Exercises: IntIdTable(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
     val individualExcercises = reference("IdividualExcercises", IdividualExcercises)
