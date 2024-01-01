@@ -10,8 +10,8 @@ fun getHTMLData(videoId: String): String {
                     var player;
                     function onYouTubeIframeAPIReady() {
                         player = new YT.Player('player', {
-                            height: '450',
-                            width: '650',
+                            height: '768',
+                            width: '1024',
                             videoId: '$videoId',
                             playerVars: {
                                 'playsinline': 1

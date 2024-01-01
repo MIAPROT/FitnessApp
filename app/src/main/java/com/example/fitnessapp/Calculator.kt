@@ -4,6 +4,8 @@ import android.icu.lang.UCharacter.VerticalOrientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.fitnessapp.components.DialogCard
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun CalculatorScreen() {
     var OpenAlertDialogInfo by remember {
@@ -96,7 +98,7 @@ fun CalculatorScreen() {
 
     Box(contentAlignment = Alignment.Center) {
         Column(verticalArrangement = Arrangement.spacedBy(20.dp),horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)){
+            FlowRow(verticalArrangement = Arrangement.Center, horizontalArrangement = Arrangement.spacedBy(10.dp)){
                 Text(
                     text = "Калькулятор калорий", style = TextStyle(
                         fontSize = 30.sp,
