@@ -32,8 +32,6 @@ fun DBTesting() {
                 timer = "0:00:35"
             }
 
-
-
             println("IdividualExcercise: ${IdividualExcercise.all().forEach{ println(it.name + " " + it.link) }}")
             println("Muscular_types: ${Muscular_Type.all().forEach{ println(it.name) }}")
 

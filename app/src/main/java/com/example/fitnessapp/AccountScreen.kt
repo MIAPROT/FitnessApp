@@ -1,5 +1,6 @@
 package com.example.fitnessapp
 
+import android.content.Intent
 import android.graphics.Paint.Align
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -40,12 +41,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key.Companion.Calculator
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.fitnessapp.components.DialogCard
 import com.example.fitnessapp.db.Db
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 import kotlinx.coroutines.launch
@@ -72,6 +78,7 @@ fun AccountScreen() {
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = 1578096000000)
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val navController = rememberNavController()
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -80,7 +87,9 @@ fun AccountScreen() {
 
     { contentPadding ->
 
-        Box(modifier = Modifier.fillMaxSize().padding(contentPadding), contentAlignment = Alignment.Center)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding), contentAlignment = Alignment.Center)
         {
             Column {
                 Text(
@@ -165,7 +174,7 @@ fun AccountScreen() {
                     } }) {
                         Text(text = "Сохранить")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigate("Calculator") }) {
                         Icon(Icons.Default.Face, contentDescription = null)
                     }
                 }
@@ -189,6 +198,15 @@ fun AccountScreen() {
                 }
 
             }
+    }
+    NavHost(navController = navController, startDestination = "AccountScreen"){
+        composable("AccoutScreen"){
+            AccountScreen()
+        }
+        composable("Calculator")
+        {
+            CalculatorScreen()
+        }
     }
 }
 
