@@ -174,14 +174,31 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                 Slider(
                     value = dailyActive,
                     onValueChange = { dailyActive = it },
+                    valueRange = 1000f..1900.0f,
                     modifier = Modifier.width(300.dp)
                 )
-                Text(text = dailyActive.toString())
+                Text(text = dailyActive.toString(),style = TextStyle(
+                    fontSize = 12.sp,
+                    lineHeight = 20.sp,
+                    fontWeight = FontWeight(800),
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.1.sp
+                ), color = MaterialTheme.colorScheme.primary)
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .width(300.dp),
-                    text = "TestText", style = TextStyle(
+                    text = if (dailyActive <= 1200) {
+                        "Для малоподвижных людей, тренировок мало или они отсутствуют"
+                    } else if (dailyActive <= 1375) {
+                        "Для людей с низкой активностью, легкие тренировки 1-3 раза в неделю или в виде эквивалента другой активности."
+                    } else if(dailyActive <= 1550){
+                        "Для очень активных людей: физическая работа полный день или интенсивные тренировки 6-7 раз в неделю."
+                    } else if(dailyActive <= 1725){
+                        "Для умеренно активных людей: физическая работа средней тяжести или регулярные тренировки 3-5 дней в неделю."
+                    } else{
+                        "Для предельно активных людей: тяжелая физическая работа и интенсивные тренировки/занятия спортом."
+                    }, style = TextStyle(
                         fontSize = 20.sp,
                         lineHeight = 20.sp,
                         fontWeight = FontWeight(800),

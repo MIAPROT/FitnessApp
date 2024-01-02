@@ -108,12 +108,8 @@ fun CalculatorScreen() {
                         letterSpacing = 0.1.sp
                     ), color = MaterialTheme.colorScheme.primary
                 )
-                IconButton(
-                    onClick = {
-                        OpenAlertDialogInfo = true
-                    }
-                ) {
-                    Icon(Icons.Default.Info, contentDescription = null)
+                IconButton(onClick = { OpenAlertDialogInfo = true }) {
+                    Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(60.dp))
                 }
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally,verticalArrangement = Arrangement.spacedBy(10.dp) ) {

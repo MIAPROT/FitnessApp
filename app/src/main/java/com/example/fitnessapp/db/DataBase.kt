@@ -23,6 +23,21 @@ object Muscular_Types : IntIdTable(){
     val name: Column<String> = varchar("name", length = 30)
 }
 
+object Persons: IntIdTable(){
+    val date: Column<String> = varchar("date", length = 300)
+    val weight: Column<Int> = integer("weight")
+    val height: Column<Int> = integer("height")
+    val activity: Column<Int> = integer("activity")
+}
+
+class Person(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<Person>(Persons)
+    var date by Persons.date
+    var weight by Persons.weight
+    var height by Persons.height
+    var activity by Persons.activity
+}
+
 object IdividualExcercises: IntIdTable(){
     val name: Column<String> = varchar("name", length = 30)
     val muscular_id: Column<Int?> = (integer("muscular_id").references(Muscular_Types.id)).nullable()
