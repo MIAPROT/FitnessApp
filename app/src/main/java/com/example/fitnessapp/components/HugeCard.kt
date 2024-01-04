@@ -23,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,11 +47,24 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
     var isCalculatorVisible by remember {
         mutableStateOf(false)
     }
+    val sampleItems = remember {
+        mutableStateListOf(
+            TrainingCardDTO(
+                "Жим ногами", "Квадрицепс, мышцы бедра и ягодиц",
+                R.drawable.testimage, false, destonation = "", timer = 10, muscular_type = 1, link = "OCKQBMlXeGc"
+            ),
+            TrainingCardDTO(
+                "Подтягивания средний хват",
+                "трапеция, широчайшая",
+                R.drawable.testimage,
+                false, destonation = "", timer = 10, muscular_type = 1, link = "wEX1_NYoPls"
+            )
+        )
+    }
     if (isCalculatorVisible)
         AlertDialog(onDismissRequest = { isCalculatorVisible = false }) {
 
-            TrainingCard()
-
+            TrainingCardList(trainingInfoList = sampleItems)
         }
     androidx.compose.material3.Card(
         Modifier

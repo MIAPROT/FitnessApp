@@ -30,49 +30,13 @@ fun IndividualExercises() {
         mutableStateListOf(
             TrainingCardDTO(
                 "Жим ногами", "Квадрицепс, мышцы бедра и ягодиц",
-                R.drawable.testimage, false, destonation = ""
+                R.drawable.testimage, false, destonation = "", timer = 10, muscular_type = 1, link = ""
             ),
             TrainingCardDTO(
                 "Подтягивания средний хват",
                 "трапеция, широчайшая",
                 R.drawable.testimage,
-                false, destonation = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = ""
+                false, destonation = "", timer = 10, muscular_type = 1, link = ""
             )
         )
     }

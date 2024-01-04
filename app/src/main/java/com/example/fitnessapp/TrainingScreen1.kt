@@ -16,8 +16,8 @@ fun TrainingScreen1(navController: NavHostController) {
         mutableStateListOf(
             TrainingCardDTO(
                 "Готовые тренировки", "Тренировки до 30 минут",
-                R.drawable.testimage, destonation = "TrainingScreen2"
-            ), TrainingCardDTO("Отдельные упражнения", "Упражнения", R.drawable.testimage, destonation = "IndividualExcercisesScreen")
+                R.drawable.testimage, destonation = "TrainingScreen2", timer = 10, muscular_type = 1, link = ""
+            ), TrainingCardDTO("Отдельные упражнения", "Упражнения", R.drawable.testimage, destonation = "IndividualExcercisesScreen", timer = 10, muscular_type = 1, link = "")
         )
     }
     CardList(cardList,

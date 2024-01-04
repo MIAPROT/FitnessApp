@@ -25,6 +25,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Card(card: TrainingCardDTO, modifier: Modifier ) {
+
     Card(
         modifier.padding(end = 10.dp, bottom = 10.dp).fillMaxWidth().shadow(4.dp, RoundedCornerShape(12.dp))
             .border(BorderStroke(1.dp, MaterialTheme.colorScheme.outline), RoundedCornerShape(12.dp))) {
@@ -59,7 +60,7 @@ fun Card(card: TrainingCardDTO, modifier: Modifier ) {
 fun CardPreview() {
     FitnessAppTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Card(TrainingCardDTO("Тест2", "Тест", R.drawable.testimage,false, destonation = ""), Modifier)
+            Card(TrainingCardDTO("Тест2", "Тест", R.drawable.testimage,false, destonation = "", timer = 10, muscular_type = 1, link = ""), Modifier)
         }
     }
 }

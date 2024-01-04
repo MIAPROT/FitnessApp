@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fitnessapp.IndividualExercises
-import com.example.fitnessapp.db.IdividualExcercises.timer
+import com.example.fitnessapp.db.IndividualExcercises.timer
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toLocalTime
@@ -19,21 +19,31 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Composable
 fun DBTesting() {
-    LaunchedEffect(null ){
+    LaunchedEffect(null) {
         Db
         transaction {
 
-            SchemaUtils.create (Muscular_Types, IdividualExcercises, ReadyMadeWorkouts, ReadyMadeWorkouts_Idividual_Exercises, DoneExcercises)
-            Muscular_Type.new { name="Грудь" }
-            IdividualExcercise.new{
+            SchemaUtils.create(
+                Muscular_Types,
+                IndividualExcercises,
+                ReadyMadeWorkouts,
+                ReadyMadeWorkouts_Idividual_Exercises,
+                DoneExcercises
+            )
+            Muscular_Type.new { name = "Грудь" }
+            IdividualExcercise.new {
                 name = "Подъём корпуса на прес"
                 muscular_id = 1
                 link = "o0T9qoofUNY"
                 timer = "0:00:35"
             }
 
-            println("IdividualExcercise: ${IdividualExcercise.all().forEach{ println(it.name + " " + it.link) }}")
-            println("Muscular_types: ${Muscular_Type.all().forEach{ println(it.name) }}")
+            println(
+                "IdividualExcercise: ${
+                    IdividualExcercise.all().forEach { println(it.name + " " + it.link) }
+                }"
+            )
+            println("Muscular_types: ${Muscular_Type.all().forEach { println(it.name) }}")
 
         }
     }

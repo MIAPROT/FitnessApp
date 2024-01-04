@@ -1,5 +1,6 @@
 package com.example.fitnessapp.db
 
+import com.example.fitnessapp.IndividualExercises
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import org.jetbrains.exposed.dao.IntEntity
@@ -38,30 +39,33 @@ class Person(id: EntityID<Int>) : IntEntity(id){
     var activity by Persons.activity
 }
 
-object IdividualExcercises: IntIdTable(){
+object IndividualExcercises: IntIdTable(){
     val name: Column<String> = varchar("name", length = 30)
     val muscular_id: Column<Int?> = (integer("muscular_id").references(Muscular_Types.id)).nullable()
     val link: Column<String> = varchar("link", length = 400)
     var timer: Column<String> = varchar("timer", length = 300)
+    val description: Column<String> = varchar("description", length = 1000)
+    val image: Column<Int> = integer("image")
 }
 
 class IdividualExcercise(id: EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<IdividualExcercise>(IdividualExcercises)
-    var name by IdividualExcercises.name
-    var muscular_id by IdividualExcercises.muscular_id
-    var link by IdividualExcercises.link
-    var timer by IdividualExcercises.timer
-
+    companion object : IntEntityClass<IdividualExcercise>(IndividualExcercises)
+    var name by IndividualExcercises.name
+    var muscular_id by IndividualExcercises.muscular_id
+    var link by IndividualExcercises.link
+    var timer by IndividualExcercises.timer
+    var description by IndividualExcercises.description
+    var image by IndividualExcercises.image
 }
 
 object DoneExcercises: IntIdTable(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
-    val individualExcercises = reference("IdividualExcercises", IdividualExcercises)
+    val individualExcercises = reference("IdividualExcercises", IndividualExcercises)
 }
 
 object ReadyMadeWorkouts_Idividual_Exercises: IntIdTable(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
-    val individualExcercises = reference("IdividualExcercises", IdividualExcercises)
+    val individualExcercises = reference("IdividualExcercises", IndividualExcercises)
 }
 
 
