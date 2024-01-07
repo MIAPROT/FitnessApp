@@ -38,14 +38,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.fitnessapp.db.DBTesting
+import com.example.fitnessapp.db.Db
+import com.example.fitnessapp.db.Person
+import com.example.fitnessapp.db.Persons
+import com.example.fitnessapp.db.Persons.age
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstTimeScreenMain(navController: NavHostController) {
+    //DBTesting()
+    Db
     var currentScreenId by remember {
         mutableIntStateOf(0)
     }
@@ -155,6 +166,9 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                         )
                     },
                     label = { Text(text = "Height") })
+                transaction {
+                    Person.findById(1)!!.weight = weight.value.toInt()
+                }
             }
         },
         {
@@ -206,6 +220,9 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                         letterSpacing = 0.1.sp
                     ), color = MaterialTheme.colorScheme.primary
                 )
+                transaction {
+                    Person.findById(1)!!.height = height.value.toInt()
+                }
             }
         },
         {
@@ -236,6 +253,9 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                     ),
                     color = MaterialTheme.colorScheme.primary
                 )
+                transaction {
+                    Person.findById(1)!!.activity = dailyActive.toInt()
+                }
 
             }
         })
@@ -250,9 +270,30 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                         DatePicker(state = datePickerState)
                         Button(onClick = {
                             if (datePickerState.selectedDateMillis != null) {
-                                date.value =
-                                    SimpleDateFormat("MM/dd/yyyy").format(Date(datePickerState.selectedDateMillis!!))
-                                isVisible = false
+                                val selectedDate = Calendar.getInstance().apply {
+                                    timeInMillis = datePickerState.selectedDateMillis!!
+                                }
+                                val currentDate = Calendar.getInstance()
+
+                                var age = currentDate.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR)
+
+                                // Добавьте проверку для случая, если день рождения в этом году еще не наступил
+                                if (currentDate.get(Calendar.DAY_OF_YEAR) < selectedDate.get(Calendar.DAY_OF_YEAR)) {
+                                    age--
+                                }
+
+                                // Проверьте, что возраст представляет собой непустую числовую строку перед попыткой преобразования
+                                val ageString = age.toString()
+                                if (ageString.isNotBlank()) {
+                                    println(age)
+                                    transaction {
+                                        Person.findById(1)!!.age = age
+                                    }
+                                    date.value = SimpleDateFormat("MM/dd/yyyy").format(Date(datePickerState.selectedDateMillis!!))
+                                    isVisible = false
+                                } else {
+                                    println("Недопустимый возраст: $ageString")
+                                }
                             }
                         }) {
                             Text(text = "Ok!")

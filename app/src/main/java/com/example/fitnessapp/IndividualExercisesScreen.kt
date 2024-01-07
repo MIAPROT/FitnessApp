@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -19,27 +20,40 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.components.CardList
 import com.example.fitnessapp.components.SearchBar
+import com.example.fitnessapp.db.Db
+import com.example.fitnessapp.db.IndividualExcercise
+import com.example.fitnessapp.db.IndividualExcercises.link
+import com.example.fitnessapp.db.IndividualExcercises.timer
 import com.example.fitnessapp.models.TrainingCardDTO
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @Composable
 fun IndividualExercises() {
+    Db
     var search by remember { mutableStateOf("") }
+
+    var ExcercisesList = remember { (transaction {IndividualExcercise.all().toList()}) }
     val cardList = remember {
-        mutableStateListOf(
-            TrainingCardDTO(
-                "Жим ногами", "Квадрицепс, мышцы бедра и ягодиц",
-                R.drawable.testimage, false, destonation = "", timer = 10, muscular_type = 1, link = ""
-            ),
-            TrainingCardDTO(
-                "Подтягивания средний хват",
-                "трапеция, широчайшая",
-                R.drawable.testimage,
-                false, destonation = "", timer = 10, muscular_type = 1, link = ""
-            )
-        )
+        mutableStateListOf<TrainingCardDTO>()
     }
+    LaunchedEffect(null){
+        ExcercisesList.forEach { exercise ->
+            cardList.add(
+                TrainingCardDTO(
+                    name = exercise.name,
+                    description = exercise.description,
+                    image = R.drawable.testimage,
+                    showdate = false,
+                    destonation = "",
+                    timer = exercise.timer,
+                    muscular_type = exercise.muscular_id?: 1,
+                    link = exercise.link
+                )
+            )
+        }
+    }
+
     Column(Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         SearchBar(
             value = search,
@@ -57,6 +71,7 @@ fun IndividualExercises() {
     }
 
 }
+
 
 @Preview
 @Composable

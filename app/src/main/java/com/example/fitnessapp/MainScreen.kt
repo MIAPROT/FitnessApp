@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.fitnessapp.db.DBTesting
 import com.example.fitnessapp.models.BottomNavbarItem
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,31 +1,25 @@
 package com.example.fitnessapp.db
 
-import com.example.fitnessapp.IndividualExercises
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.kotlin.datetime.date
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-import org.jetbrains.exposed.sql.kotlin.datetime.time
-import java.sql.Time
-import java.util.Date
 
 
 object ReadyMadeWorkouts : IntIdTable() {
-    val name: Column<String> = varchar("name", length = 30)
-    val description: Column<String> = varchar("description", length = 60)
+    val name: Column<String> = varchar("name", length = 300)
+    val description: Column<String> = varchar("description", length = 300)
 }
 
 object Muscular_Types : IntIdTable(){
-    val name: Column<String> = varchar("name", length = 30)
+    val name: Column<String> = varchar("name", length = 300)
 }
 
 object Persons: IntIdTable(){
-    val date: Column<String> = varchar("date", length = 300)
+    val age: Column<Int> = integer("age")
     val weight: Column<Int> = integer("weight")
     val height: Column<Int> = integer("height")
     val activity: Column<Int> = integer("activity")
@@ -33,23 +27,23 @@ object Persons: IntIdTable(){
 
 class Person(id: EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<Person>(Persons)
-    var date by Persons.date
+    var age by Persons.age
     var weight by Persons.weight
     var height by Persons.height
     var activity by Persons.activity
 }
 
 object IndividualExcercises: IntIdTable(){
-    val name: Column<String> = varchar("name", length = 30)
+    val name: Column<String> = varchar("name", length = 600)
     val muscular_id: Column<Int?> = (integer("muscular_id").references(Muscular_Types.id)).nullable()
     val link: Column<String> = varchar("link", length = 400)
-    var timer: Column<String> = varchar("timer", length = 300)
+    var timer: Column<Int> = integer("timer")
     val description: Column<String> = varchar("description", length = 1000)
     val image: Column<Int> = integer("image")
 }
 
-class IdividualExcercise(id: EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<IdividualExcercise>(IndividualExcercises)
+class IndividualExcercise(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<IndividualExcercise>(IndividualExcercises)
     var name by IndividualExcercises.name
     var muscular_id by IndividualExcercises.muscular_id
     var link by IndividualExcercises.link
@@ -60,25 +54,33 @@ class IdividualExcercise(id: EntityID<Int>) : IntEntity(id){
 
 object DoneExcercises: IntIdTable(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
-    val individualExcercises = reference("IdividualExcercises", IndividualExcercises)
+    val individualExcercises = reference("IndividualExcercises", IndividualExcercises)
 }
 
-object ReadyMadeWorkouts_Idividual_Exercises: IntIdTable(){
+class DoneExcercise(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<DoneExcercise>(DoneExcercises)
+    var readyMadeWorkouts by DoneExcercises.readyMadeWorkouts
+    var individualExcercises by DoneExcercises.individualExcercises
+}
+
+object ReadyMadeWorkouts_Idividual_Exercises: Table(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
-    val individualExcercises = reference("IdividualExcercises", IndividualExcercises)
+    val individualExcercises = reference("IndividualExcercises", IndividualExcercises)
+    override val primaryKey = PrimaryKey(readyMadeWorkouts, individualExcercises)
 }
 
 
-class ReadyMadeWorkout_Idividual_Exercise(id: EntityID<Int>) : IntEntity(id){
+/*class ReadyMadeWorkout_Idividual_Exercise(id: EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<ReadyMadeWorkout_Idividual_Exercise>(ReadyMadeWorkouts_Idividual_Exercises)
-    val name by ReadyMadeWorkouts_Idividual_Exercises.readyMadeWorkouts
-    val individualExcercises by ReadyMadeWorkouts_Idividual_Exercises.individualExcercises
-}
+    var readyMadeWorkouts by ReadyMadeWorkouts_Idividual_Exercises.readyMadeWorkouts
+    var individualExcercises by ReadyMadeWorkouts_Idividual_Exercises.individualExcercises
+}*/
 
 class ReadyMadeWorkout(id: EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<ReadyMadeWorkout>(ReadyMadeWorkouts)
     var name by ReadyMadeWorkouts.name
     var description by ReadyMadeWorkouts.description
+    var readyMadeWorkouts by IndividualExcercise via ReadyMadeWorkouts_Idividual_Exercises
 }
 
 class Muscular_Type(id: EntityID<Int>) : IntEntity(id){
