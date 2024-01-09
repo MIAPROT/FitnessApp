@@ -12,6 +12,7 @@ import org.jetbrains.exposed.sql.kotlin.datetime.date
 object ReadyMadeWorkouts : IntIdTable() {
     val name: Column<String> = varchar("name", length = 300)
     val description: Column<String> = varchar("description", length = 300)
+    val image: Column<String> = varchar("image", length = 600)
 }
 
 object Muscular_Types : IntIdTable(){
@@ -39,7 +40,7 @@ object IndividualExcercises: IntIdTable(){
     val link: Column<String> = varchar("link", length = 400)
     var timer: Column<Int> = integer("timer")
     val description: Column<String> = varchar("description", length = 1000)
-    val image: Column<Int> = integer("image")
+    val image: Column<String> = varchar("image", length = 600)
 }
 
 class IndividualExcercise(id: EntityID<Int>) : IntEntity(id){
@@ -80,6 +81,7 @@ class ReadyMadeWorkout(id: EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<ReadyMadeWorkout>(ReadyMadeWorkouts)
     var name by ReadyMadeWorkouts.name
     var description by ReadyMadeWorkouts.description
+    var image by ReadyMadeWorkouts.image
     var readyMadeWorkouts by IndividualExcercise via ReadyMadeWorkouts_Idividual_Exercises
 }
 

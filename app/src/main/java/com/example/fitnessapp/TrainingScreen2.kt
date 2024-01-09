@@ -52,9 +52,13 @@ fun TrainingScreen2() {
                         }
 
                         uniqueMuscularNames.joinToString(", ")
+                    },
+                    listOfExcerises = transaction {
+                        ReadyMadeWorkout.findById(exercise.id)?.readyMadeWorkouts?.map { it.id.value }?.toList() ?: emptyList()
                     }
                 )
             )
+            println(cardList[0].listOfExcerises)
         }
     }
 

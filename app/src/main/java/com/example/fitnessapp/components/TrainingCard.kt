@@ -86,7 +86,6 @@ fun TrainingCard(trainingInfo: TrainingCardDTO) {
                     fontSize = 24.sp
                 )
                 Text(
-                    /*text = "*/
                     text = trainingInfo.description,
                     modifier = Modifier.padding(top = 8.dp),
                     style = MaterialTheme.typography.labelSmall, fontSize = 16.sp

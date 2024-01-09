@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
@@ -32,10 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.db.DBTesting
@@ -135,14 +138,24 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                 )
                 OutlinedTextField(
                     value = weight.value,
-                    onValueChange = { newText -> weight.value = newText },
+                    onValueChange = { newText ->
+                        // Check if the input is a valid integer before updating the value
+                        if (newText.isDigitsOnly()) {
+                            weight.value = newText
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
                     trailingIcon = {
                         Image(
                             Icons.Default.Close, contentDescription = null
                         )
                     },
-                    label = { Text(text = "Weight") })
+                    label = { Text(text = "Weight") }
+                )
             }
+
 
         },
         {
@@ -165,6 +178,9 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                             Icons.Default.Close, contentDescription = null
                         )
                     },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
                     label = { Text(text = "Height") })
                 transaction {
                     Person.findById(1)!!.weight = weight.value.toInt()
@@ -207,9 +223,9 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                     } else if (dailyActive <= 1375) {
                         "Для людей с низкой активностью, легкие тренировки 1-3 раза в неделю или в виде эквивалента другой активности."
                     } else if(dailyActive <= 1550){
-                        "Для очень активных людей: физическая работа полный день или интенсивные тренировки 6-7 раз в неделю."
-                    } else if(dailyActive <= 1725){
                         "Для умеренно активных людей: физическая работа средней тяжести или регулярные тренировки 3-5 дней в неделю."
+                    } else if(dailyActive <= 1725){
+                        "Для очень активных людей: физическая работа полный день или интенсивные тренировки 6-7 раз в неделю."
                     } else{
                         "Для предельно активных людей: тяжелая физическая работа и интенсивные тренировки/занятия спортом."
                     }, style = TextStyle(
