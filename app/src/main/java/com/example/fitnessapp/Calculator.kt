@@ -67,7 +67,7 @@ fun CalculatorScreen() {
     if(OpenAlertDialogLightWeight) {
         AlertDialog(onDismissRequest = { OpenAlertDialogLightWeight = false }) {
             DialogCard(
-                MainText = "Пися маленькая попа",
+                MainText = "Количество калорий необходимое для похудения",
                 SecondaryText = "",
                 onClick = {OpenAlertDialogLightWeight = false}
             )
@@ -77,7 +77,7 @@ fun CalculatorScreen() {
     if(OpenAlertDialogHardWeight) {
         AlertDialog(onDismissRequest = { OpenAlertDialogHardWeight = false }) {
             DialogCard(
-                MainText = "Пися большая попа",
+                MainText = "Количество калорий необходимое для набора массы",
                 SecondaryText = "",
                 onClick = {OpenAlertDialogHardWeight = false}
             )
@@ -87,7 +87,7 @@ fun CalculatorScreen() {
     if(OpenAlertDialogNormalWeight) {
         AlertDialog(onDismissRequest = { OpenAlertDialogNormalWeight = false }) {
             DialogCard(
-                MainText = "Пися норм попа",
+                MainText = "Количество калорий необходимое для поддержания веса",
                 SecondaryText = "",
                 onClick = {OpenAlertDialogNormalWeight = false}
             )

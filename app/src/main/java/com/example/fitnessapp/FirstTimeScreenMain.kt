@@ -65,29 +65,6 @@ import java.util.Date
 fun FirstTimeScreenMain(navController: NavHostController) {
     Db
     DBTesting()
-    transaction {
-
-        SchemaUtils.create(
-            Muscular_Types,
-            IndividualExcercises,
-            ReadyMadeWorkouts,
-            ReadyMadeWorkouts_Idividual_Exercises,
-            DoneExcercises,
-            Persons
-        )
-        Muscular_Type.new { name = "" }
-        Muscular_Type.new { name = "пресс" }
-        Person.new{
-            age = 30
-            weight = 60
-            height = 178
-            activity = 1500
-        }
-
-
-        println("Muscular_types: ${Muscular_Type.all().forEach { println(it.name) }}")
-
-    }
 
     var currentScreenId by remember {
         mutableIntStateOf(0)
