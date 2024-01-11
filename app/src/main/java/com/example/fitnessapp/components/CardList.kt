@@ -11,15 +11,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.example.fitnessapp.R
 import com.example.fitnessapp.db.Db
+import com.example.fitnessapp.db.DoneExcercise
+import com.example.fitnessapp.db.IndividualExcercise
 import com.example.fitnessapp.models.TrainingCardDTO
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardList(cardList: List<TrainingCardDTO>, modifier: Modifier, navController: NavHostController) {
+fun CardList(
+    cardList: List<TrainingCardDTO>,
+    modifier: Modifier,
+    navController: NavHostController
+) {
     Db
-    var dialogCard:TrainingCardDTO? by remember {
+    var dialogCard: TrainingCardDTO? by remember {
         mutableStateOf(null)
     }
     var InformationVisibility by remember {
@@ -35,8 +41,18 @@ fun CardList(cardList: List<TrainingCardDTO>, modifier: Modifier, navController:
     LazyColumn(modifier = modifier) {
         items(cardList.size) {
             val card = cardList[it]
-            Card(card,if(card.destonation.isNotEmpty()) Modifier.clickable { navController.navigate(card.destonation) } else Modifier.clickable { InformationVisibility = true
-            dialogCard = card})
+            Card(
+                card,
+                if (card.destonation.isNotEmpty()) Modifier.clickable { navController.navigate(card.destonation) } else Modifier.clickable {
+                    InformationVisibility = true
+                    dialogCard = card
+                    transaction {
+                        DoneExcercise.new {
+                            individualExcercises = IndividualExcercise.findById(card.id)!!.id
+                            readyMadeWorkouts = null
+                        }
+                    }
+                })
 
         }
     }

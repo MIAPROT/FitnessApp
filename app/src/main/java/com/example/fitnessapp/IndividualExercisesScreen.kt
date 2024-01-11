@@ -33,24 +33,26 @@ fun IndividualExercises() {
     Db
     var search by remember { mutableStateOf("") }
 
-    var ExcercisesList = remember { (transaction {IndividualExcercise.all().toList()}) }
     val cardList = remember {
         mutableStateListOf<TrainingCardDTO>()
     }
-    LaunchedEffect(null){
-        ExcercisesList.forEach { exercise ->
-            cardList.add(
-                TrainingCardDTO(
-                    name = exercise.name,
-                    description = exercise.description,
-                    image = R.drawable.testimage,
-                    showdate = false,
-                    destonation = "",
-                    timer = exercise.timer,
-                    muscular_type = exercise.muscular_id?: 1,
-                    link = exercise.link
+    LaunchedEffect(null) {
+        transaction {
+            IndividualExcercise.all().forEach() { exercise ->
+                cardList.add(
+                    TrainingCardDTO(
+                        name = exercise.name,
+                        description = exercise.description,
+                        image = exercise.image,
+                        showdate = false,
+                        destonation = "",
+                        timer = exercise.timer,
+                        muscular_type = exercise.muscular_id ?: 1,
+                        link = exercise.link,
+                        id = exercise.id.value
+                    )
                 )
-            )
+            }
         }
     }
 

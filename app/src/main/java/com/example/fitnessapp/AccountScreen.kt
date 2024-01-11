@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -95,6 +96,12 @@ fun AccountScreen() {
             .padding(contentPadding), contentAlignment = Alignment.Center)
         {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
+                LaunchedEffect(null ){
+                    transaction { weight.value = Person.findById(1)!!.weight.toString()
+                     height.value = Person.findById(1)!!.height.toString()
+                     dailyActive = Person.findById(1)!!.activity.toFloat() }
+
+                }
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Дата рождения", style = TextStyle(
@@ -124,7 +131,6 @@ fun AccountScreen() {
                         letterSpacing = 0.1.sp
                     ), color = MaterialTheme.colorScheme.primary
                 )
-                transaction { weight.value = Person.findById(1)!!.weight.toString() }
                 OutlinedTextField(
                     value = weight.value,
                     onValueChange = { newText -> weight.value = newText },
@@ -147,7 +153,7 @@ fun AccountScreen() {
                         letterSpacing = 0.1.sp
                     ), color = MaterialTheme.colorScheme.primary
                 )
-                transaction { height.value = Person.findById(1)!!.height.toString() }
+
                 OutlinedTextField(
                     value = height.value,
                     onValueChange = { newText -> height.value = newText },
@@ -170,7 +176,6 @@ fun AccountScreen() {
                         letterSpacing = 0.1.sp
                     ), color = MaterialTheme.colorScheme.primary
                 )
-                transaction { dailyActive = Person.findById(1)!!.activity.toFloat() }
                 Slider(
                     value = dailyActive,
                     onValueChange = { dailyActive = it },

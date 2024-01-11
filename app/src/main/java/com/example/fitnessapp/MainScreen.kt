@@ -20,7 +20,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.fitnessapp.db.DBTesting
 import com.example.fitnessapp.models.BottomNavbarItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +29,7 @@ fun MainScreen() {
     var navBarItemsList =
         listOf<BottomNavbarItem>(
             BottomNavbarItem(Icons.Default.Favorite, "Тренировки", { TrainingScreen1(navController) }),
-            BottomNavbarItem(Icons.Default.Star, "История", {}),
+            BottomNavbarItem(Icons.Default.Star, "История", { HistoryScreen(navController)}),
             BottomNavbarItem(Icons.Default.AccountCircle, "Профиль", { AccountScreen()})
         )
     Scaffold(

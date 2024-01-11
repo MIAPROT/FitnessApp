@@ -6,13 +6,12 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.kotlin.datetime.date
 
 
 object ReadyMadeWorkouts : IntIdTable() {
     val name: Column<String> = varchar("name", length = 300)
     val description: Column<String> = varchar("description", length = 300)
-    val image: Column<String> = varchar("image", length = 600)
+    val image: Column<String> = varchar("image",10000)
 }
 
 object Muscular_Types : IntIdTable(){
@@ -36,11 +35,11 @@ class Person(id: EntityID<Int>) : IntEntity(id){
 
 object IndividualExcercises: IntIdTable(){
     val name: Column<String> = varchar("name", length = 600)
-    val muscular_id: Column<Int?> = (integer("muscular_id").references(Muscular_Types.id)).nullable()
+    val muscular_id: Column<Int> = integer("muscular_id").references(Muscular_Types.id)
     val link: Column<String> = varchar("link", length = 400)
     var timer: Column<Int> = integer("timer")
     val description: Column<String> = varchar("description", length = 1000)
-    val image: Column<String> = varchar("image", length = 600)
+    val image: Column<String> = varchar("image",10000)
 }
 
 class IndividualExcercise(id: EntityID<Int>) : IntEntity(id){
@@ -54,8 +53,8 @@ class IndividualExcercise(id: EntityID<Int>) : IntEntity(id){
 }
 
 object DoneExcercises: IntIdTable(){
-    val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
-    val individualExcercises = reference("IndividualExcercises", IndividualExcercises)
+    val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts).nullable()
+    val individualExcercises = reference("IndividualExcercises", IndividualExcercises).nullable()
 }
 
 class DoneExcercise(id: EntityID<Int>) : IntEntity(id){
@@ -71,12 +70,6 @@ object ReadyMadeWorkouts_Idividual_Exercises: Table(){
 }
 
 
-/*class ReadyMadeWorkout_Idividual_Exercise(id: EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<ReadyMadeWorkout_Idividual_Exercise>(ReadyMadeWorkouts_Idividual_Exercises)
-    var readyMadeWorkouts by ReadyMadeWorkouts_Idividual_Exercises.readyMadeWorkouts
-    var individualExcercises by ReadyMadeWorkouts_Idividual_Exercises.individualExcercises
-}*/
-
 class ReadyMadeWorkout(id: EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<ReadyMadeWorkout>(ReadyMadeWorkouts)
     var name by ReadyMadeWorkouts.name
@@ -89,3 +82,9 @@ class Muscular_Type(id: EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<Muscular_Type>(Muscular_Types)
     var name by Muscular_Types.name
 }
+
+/*class ReadyMadeWorkout_Idividual_Exercise(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<ReadyMadeWorkout_Idividual_Exercise>(ReadyMadeWorkouts_Idividual_Exercises)
+    var readyMadeWorkouts by ReadyMadeWorkouts_Idividual_Exercises.readyMadeWorkouts
+    var individualExcercises by ReadyMadeWorkouts_Idividual_Exercises.individualExcercises
+}*/

@@ -1,7 +1,6 @@
 package com.example.fitnessapp.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
@@ -27,15 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.fitnessapp.R
+import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
 import com.example.fitnessapp.db.Db
+import com.example.fitnessapp.db.DoneExcercise
 import com.example.fitnessapp.db.IndividualExcercise
-import com.example.fitnessapp.db.IndividualExcercises.image
-import com.example.fitnessapp.db.IndividualExcercises.link
-import com.example.fitnessapp.db.IndividualExcercises.timer
+import com.example.fitnessapp.db.ReadyMadeWorkout
 import com.example.fitnessapp.models.ReadyWorkoutCardDTO
 import com.example.fitnessapp.models.TrainingCardDTO
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
@@ -55,14 +57,16 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
         card.listOfExcerises.forEach { exercise ->
             sampleItems.add(
                 TrainingCardDTO(
-                    name = transaction { IndividualExcercise.findById(exercise)!!.name} ,
-                    description = transaction {  IndividualExcercise.findById(exercise)!!.description},
-                    image = R.drawable.testimage,
+                    name = transaction { IndividualExcercise.findById(exercise)!!.name },
+                    description = transaction { IndividualExcercise.findById(exercise)!!.description },
+                    image = "",
                     showdate = false,
                     destonation = "",
                     timer = transaction { IndividualExcercise.findById(exercise)!!.timer },
-                    muscular_type = transaction { IndividualExcercise.findById(exercise)!!.muscular_id } ?: 1,
-                    link = transaction { IndividualExcercise.findById(exercise)!!.link }
+                    muscular_type = transaction { IndividualExcercise.findById(exercise)!!.muscular_id }
+                        ?: 1,
+                    link = transaction { IndividualExcercise.findById(exercise)!!.link },
+                    id = 0
                 )
             )
         }
@@ -80,11 +84,22 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
             .border(
                 BorderStroke(1.dp, colorScheme.outline), RoundedCornerShape(12.dp)
             )
-            .clickable { isCalculatorVisible = true }
+            .clickable {
+                isCalculatorVisible = true
+                transaction {
+                    DoneExcercise.new {
+                        individualExcercises = null
+                        readyMadeWorkouts = ReadyMadeWorkout.findById(card.id)!!.id
+                    }
+                }
+            }
     ) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Image(
-                painter = painterResource(id = card.image),
+            SubcomposeAsyncImage(
+                model = card.image,
+                loading = {
+                    CircularProgressIndicator()
+                },
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,8 +113,12 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
             )
             Text(
                 text = card.information,
-                style = typography.labelSmall,
-                modifier = Modifier.padding(top = 16.dp)
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    lineHeight = 20.sp,
+                    fontWeight = FontWeight(800),
+                    letterSpacing = 0.1.sp
+                ), color = colorScheme.primary
             )
         }
 
@@ -116,9 +135,9 @@ fun HugeCardPreview() {
                 ReadyWorkoutCardDTO(
                     "Кардио тренировка",
                     "Кардио тренировка дома",
-                    R.drawable.testimage,
+                    "",
                     "Лёгкая кардио тренировка при помощи подручных средств. \n10 упражнений\n" +
-                            "15 минут", listOfExcerises = listOf(1, 3, 4)
+                            "15 минут", listOfExcerises = listOf(1, 3, 4), 1
                 )
             )
         }

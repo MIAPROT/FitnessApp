@@ -42,14 +42,19 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.db.DBTesting
+import com.example.fitnessapp.db.DBTestingScreen
 import com.example.fitnessapp.db.Db
+import com.example.fitnessapp.db.DoneExcercises
+import com.example.fitnessapp.db.IndividualExcercises
+import com.example.fitnessapp.db.Muscular_Type
+import com.example.fitnessapp.db.Muscular_Types
 import com.example.fitnessapp.db.Person
 import com.example.fitnessapp.db.Persons
-import com.example.fitnessapp.db.Persons.age
+import com.example.fitnessapp.db.ReadyMadeWorkouts
+import com.example.fitnessapp.db.ReadyMadeWorkouts_Idividual_Exercises
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -58,8 +63,32 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstTimeScreenMain(navController: NavHostController) {
-    //DBTesting()
     Db
+    DBTesting()
+    transaction {
+
+        SchemaUtils.create(
+            Muscular_Types,
+            IndividualExcercises,
+            ReadyMadeWorkouts,
+            ReadyMadeWorkouts_Idividual_Exercises,
+            DoneExcercises,
+            Persons
+        )
+        Muscular_Type.new { name = "" }
+        Muscular_Type.new { name = "пресс" }
+        Person.new{
+            age = 30
+            weight = 60
+            height = 178
+            activity = 1500
+        }
+
+
+        println("Muscular_types: ${Muscular_Type.all().forEach { println(it.name) }}")
+
+    }
+
     var currentScreenId by remember {
         mutableIntStateOf(0)
     }

@@ -14,13 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fitnessapp.components.HugeCardList
 import com.example.fitnessapp.db.Db
-import com.example.fitnessapp.db.IndividualExcercises.muscular_id
-import com.example.fitnessapp.db.Muscular_Type
 import com.example.fitnessapp.db.Muscular_Types
 import com.example.fitnessapp.db.ReadyMadeWorkout
 import com.example.fitnessapp.models.ReadyWorkoutCardDTO
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -28,41 +25,45 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Composable
 fun TrainingScreen2() {
     Db
-    var ReadyMadeWorkoutList = remember { (transaction { ReadyMadeWorkout.all().toList() }) }
     val cardList = remember {
         mutableStateListOf<ReadyWorkoutCardDTO>()
     }
     LaunchedEffect(null) {
-        ReadyMadeWorkoutList.forEach { exercise ->
-            cardList.add(
-                ReadyWorkoutCardDTO(
-                    name = exercise.name,
-                    description = exercise.description,
-                    image = R.drawable.testimage,
-                    information = transaction {
-                        val muscularIds = ReadyMadeWorkout.findById(exercise.id)?.readyMadeWorkouts?.map { it.muscular_id }
-                        val uniqueMuscularNames = mutableSetOf<String>()
+        transaction {
+            ReadyMadeWorkout.all().forEach() { exercise ->
+                cardList.add(
+                    ReadyWorkoutCardDTO(
+                        name = exercise.name,
+                        description = exercise.description,
+                        image = exercise.image,
+                        information = transaction {
+                            val muscularIds =
+                                ReadyMadeWorkout.findById(exercise.id)?.readyMadeWorkouts?.map { it.muscular_id }
+                            val uniqueMuscularNames = mutableSetOf<String>()
 
-                        muscularIds?.forEach { muscularId ->
-                            Muscular_Types
-                                .select { Muscular_Types.id eq muscularId }
-                                .singleOrNull()
-                                ?.get(Muscular_Types.name)
-                                ?.let { uniqueMuscularNames.add(it) }
-                        }
+                            muscularIds?.forEach { muscularId ->
+                                Muscular_Types
+                                    .select { Muscular_Types.id eq muscularId }
+                                    .singleOrNull()
+                                    ?.get(Muscular_Types.name)
+                                    ?.let { uniqueMuscularNames.add(it) }
+                            }
 
-                        uniqueMuscularNames.joinToString(", ")
-                    },
-                    listOfExcerises = transaction {
-                        ReadyMadeWorkout.findById(exercise.id)?.readyMadeWorkouts?.map { it.id.value }?.toList() ?: emptyList()
-                    }
+                            uniqueMuscularNames.joinToString(", ")
+                        },
+                        listOfExcerises = transaction {
+                            ReadyMadeWorkout.findById(exercise.id)?.readyMadeWorkouts?.map { it.id.value }
+                                ?.toList() ?: emptyList()
+                        },
+                        id = exercise.id.value
+                    )
                 )
-            )
-            println(cardList[0].listOfExcerises)
+                println(cardList[0].listOfExcerises)
+            }
         }
     }
 
-    HugeCardList(cardList , Modifier.padding(24.dp))
+    HugeCardList(cardList, Modifier.padding(24.dp))
 
 
 }
