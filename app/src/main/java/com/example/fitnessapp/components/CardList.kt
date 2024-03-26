@@ -40,7 +40,7 @@ fun CardList(
 
     LazyColumn(modifier = modifier) {
         items(cardList.size) {
-            val card = cardList[it]
+            val card = cardList.getOrNull(it)?: return@items
             Card(
                 card,
                 if (card.destonation.isNotEmpty()) Modifier.clickable { navController.navigate(card.destonation) } else Modifier.clickable {

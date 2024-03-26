@@ -12,7 +12,7 @@ fun getHTMLData(videoId: String): String {
                         player = new YT.Player('player', {
                             height: '768',
                             width: '1024',
-                            videoId: '$videoId',
+                             videoId: '$videoId',
                             playerVars: {
                                 'playsinline': 1
                             },

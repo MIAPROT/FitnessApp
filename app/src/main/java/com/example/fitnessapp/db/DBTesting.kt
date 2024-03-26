@@ -166,14 +166,3 @@ fun DBTesting() {
         }
     }
 }
-
-@Preview
-@Composable
-fun DBTestingScreen() {
-    FitnessAppTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            DBTesting()
-        }
-    }
-
-}

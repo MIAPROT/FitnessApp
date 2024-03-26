@@ -62,6 +62,7 @@ fun IndividualExercises() {
             onValueChange = { newText -> search = newText },
             modifier = Modifier
                 .height(50.dp),
+            cardList
         )
 
         CardList(

@@ -105,12 +105,3 @@ fun TrainingCard(trainingInfo: TrainingCardDTO) {
 
 }
 
-@Preview
-@Composable
-fun TrainingCardScreen() {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        TrainingCardDTO("Тест2", "Лягте на спину, согните ноги в коленях под углом 90 градусов, руки за головой, локти разведены в стороны\n" +
-                "Округлите спину и медленно усилием мышц живота поднимайте плечевой пояс по направлению к тазу. Старайтесь максимально напрячь мышцы пресса.", "",false, destonation = "", timer = 10, muscular_type = 1, link = "wEX1_NYoPls", id = 1)
-    }
-
-}

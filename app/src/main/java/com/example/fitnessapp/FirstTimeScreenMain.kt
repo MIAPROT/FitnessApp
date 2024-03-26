@@ -42,7 +42,6 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.db.DBTesting
-import com.example.fitnessapp.db.DBTestingScreen
 import com.example.fitnessapp.db.Db
 import com.example.fitnessapp.db.DoneExcercises
 import com.example.fitnessapp.db.IndividualExcercises

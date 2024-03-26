@@ -10,7 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.FirstTimeScreenMain
 import com.example.fitnessapp.MainScreen
 import com.example.fitnessapp.db.DBTesting
-import com.example.fitnessapp.db.DBTestingScreen
 
 @Composable
 fun MainNav() {
