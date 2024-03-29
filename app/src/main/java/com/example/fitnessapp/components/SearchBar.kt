@@ -23,7 +23,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Composable
 fun SearchBar(value: String, onValueChange: (String) -> Unit, modifier: Modifier, cardList: SnapshotStateList<TrainingCardDTO>) {
-    Db
     OutlinedTextField(value = value,
         onValueChange = onValueChange,
         textStyle = MaterialTheme.typography.bodyMedium,
@@ -41,12 +40,12 @@ fun SearchBar(value: String, onValueChange: (String) -> Unit, modifier: Modifier
         },
         trailingIcon = {
             IconButton(onClick = {
-                cardList.clear()
+                val tempList = mutableListOf<TrainingCardDTO>()
                 transaction {
                     IndividualExcercise.all().forEach() { exercise ->
                         if(exercise.name.contains(value, ignoreCase = true))
                         {
-                            cardList.add(
+                            tempList.add(
                                 TrainingCardDTO(
                                     name = exercise.name,
                                     description = exercise.description,
@@ -62,9 +61,8 @@ fun SearchBar(value: String, onValueChange: (String) -> Unit, modifier: Modifier
                         }
                     }
                 }
-                if(cardList.isEmpty())
-                {
-                }
+                cardList.clear()
+                cardList.addAll(tempList)
             }){
                 Icon(
                     Icons.Default.Search,
