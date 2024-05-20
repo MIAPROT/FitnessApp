@@ -1,18 +1,26 @@
 package com.example.fitnessapp
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import com.example.fitnessapp.components.AddButton
+import com.example.fitnessapp.components.CardList
 import com.example.fitnessapp.components.HugeCardList
+import com.example.fitnessapp.components.SearchBar
 import com.example.fitnessapp.db.Db
 import com.example.fitnessapp.db.Muscular_Types
 import com.example.fitnessapp.db.ReadyMadeWorkout
@@ -63,7 +71,24 @@ fun TrainingScreen2() {
         }
     }
 
-    HugeCardList(cardList, Modifier.padding(24.dp))
+    Scaffold(
+        floatingActionButton = {
+            AddButton("AddReadyWorkouts")
+        },
+        content = { paddingValues ->
+            Column(
+                Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                HugeCardList(cardList, Modifier.padding(24.dp))
+
+            }
+
+        })
+
 
 
 }

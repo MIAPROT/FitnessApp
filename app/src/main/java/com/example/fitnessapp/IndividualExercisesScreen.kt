@@ -75,7 +75,7 @@ fun IndividualExercises() {
 
     Scaffold(
         floatingActionButton = {
-            AddButton()
+            AddButton("AddTrainings")
         },
         content = { paddingValues ->
             Column(

@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fitnessapp.AccountScreen
 import com.example.fitnessapp.AddTrainings
@@ -28,10 +29,11 @@ import com.example.fitnessapp.ui.theme.FitnessAppTheme
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
-fun AddButton(){
+fun AddButton(screen: String){
     var isCalculatorVisible by remember {
         mutableStateOf(false)
     }
+
     FloatingActionButton(
         onClick = { isCalculatorVisible = true},
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -43,7 +45,13 @@ fun AddButton(){
         AlertDialog(onDismissRequest = { isCalculatorVisible = false }) {
             Surface {
                 Column {
-                    AddTrainings()
+                    if(screen == "AddReadyWorkouts")
+                    {
+                        AddReadyWorkouts()
+                    }
+                    else {
+                        AddTrainings()
+                    }
                     Button(onClick = {
                         isCalculatorVisible = false
                     }) {
@@ -60,7 +68,7 @@ fun AddButton(){
 fun AddButtonPreview() {
     FitnessAppTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            AddButton()
+            AddButton("AddTrainings")
         }
     }
 

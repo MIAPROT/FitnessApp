@@ -56,7 +56,7 @@ fun HistoryScreen(navController: NavHostController) {
     }
     Column() {
         CardList(
-            cardList,
+            cardList.reversed(),
             Modifier
                 .padding(24.dp), navController
         )
