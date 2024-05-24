@@ -1,4 +1,4 @@
-package com.example.fitnessapp
+package com.example.fitnessapp.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +39,7 @@ fun AddTrainings() {
     var training_description by remember { mutableStateOf("")}
     val youtubeLinkPrefix = "https://www.youtube.com/watch?v="
     Box(contentAlignment = Alignment.Center) {
-        Column(verticalArrangement = Arrangement.spacedBy(20.dp),horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(verticalArrangement = Arrangement.spacedBy(20.dp),horizontalAlignment = Alignment.CenterHorizontally, ) {
             FlowRow(verticalArrangement = Arrangement.Center, horizontalArrangement = Arrangement.spacedBy(10.dp)){
                 Text(
                     text = "Добавить упражнение", style = TextStyle(

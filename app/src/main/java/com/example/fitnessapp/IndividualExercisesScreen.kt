@@ -64,7 +64,7 @@ fun IndividualExercises() {
                         showdate = false,
                         destonation = "",
                         timer = exercise.timer,
-                        muscular_type = exercise.muscular_id ?: 1,
+                        muscular_type = exercise.muscular_id,
                         link = exercise.link,
                         id = exercise.id.value
                     )

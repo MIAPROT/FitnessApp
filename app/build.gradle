@@ -20,6 +20,9 @@ android {
             useSupportLibrary true
         }
     }
+    viewBinding {
+        enabled = true
+    }
 
     buildTypes {
         release {
