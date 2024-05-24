@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,14 +64,17 @@ fun TrainingCardList(trainingInfoList: List<TrainingCardDTO>) {
                     .padding(end = 8.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
-                    tint = LocalContentColor.current
+                    tint = Color.White
                 )
             }
-            LinearProgressIndicator( modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 8.dp),progress = (currentIndex + 1).toFloat() / trainingInfoList.size)
+            LinearProgressIndicator(
+                progress = { (currentIndex + 1).toFloat() / trainingInfoList.size },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp),
+            )
 
 
             IconButton(
@@ -79,9 +85,9 @@ fun TrainingCardList(trainingInfoList: List<TrainingCardDTO>) {
                     .padding(start = 8.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowForward,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null,
-                    tint = LocalContentColor.current
+                    tint = Color.White
                 )
             }
 

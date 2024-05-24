@@ -43,20 +43,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitnessapp.db.DBTesting
 import com.example.fitnessapp.db.Db
-import com.example.fitnessapp.db.DoneExcercises
-import com.example.fitnessapp.db.IndividualExcercises
-import com.example.fitnessapp.db.Muscular_Type
-import com.example.fitnessapp.db.Muscular_Types
 import com.example.fitnessapp.db.Person
-import com.example.fitnessapp.db.Persons
-import com.example.fitnessapp.db.ReadyMadeWorkouts
-import com.example.fitnessapp.db.ReadyMadeWorkouts_Idividual_Exercises
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,13 +61,13 @@ fun FirstTimeScreenMain(navController: NavHostController) {
     var currentScreenId by remember {
         mutableIntStateOf(0)
     }
-    var weight = remember {
+    val weight = remember {
         mutableStateOf("")
     }
-    var height = remember {
+    val height = remember {
         mutableStateOf("")
     }
-    var date = remember {
+    val date = remember {
         mutableStateOf("")
     }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = 1578096000000)
@@ -82,7 +75,7 @@ fun FirstTimeScreenMain(navController: NavHostController) {
         mutableStateOf(false)
     }
     var dailyActive by remember { mutableStateOf(0f) }
-    var screenList = listOf<@Composable () -> Unit>({
+    val screenList = listOf<@Composable () -> Unit>({
         Text(
             text = "Приложение для фитнеса", style = TextStyle(
                 fontSize = 20.sp,
@@ -107,7 +100,7 @@ fun FirstTimeScreenMain(navController: NavHostController) {
             )
         },
         {
-            Column() {
+            Column {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Ваша дата рождения?", style = TextStyle(
@@ -126,11 +119,11 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                             Icon(Icons.Default.DateRange, contentDescription = null)
                         }
                     },
-                    label = { Text(text = "Date") })
+                    label = { Text(text = "Дата рождения") })
             }
         },
         {
-            Column() {
+            Column {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Ваш вес?", style = TextStyle(
@@ -157,14 +150,14 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                             Icons.Default.Close, contentDescription = null
                         )
                     },
-                    label = { Text(text = "Weight") }
+                    label = { Text(text = "Вес") }
                 )
             }
 
 
         },
         {
-            Column() {
+            Column {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Ваш рост?", style = TextStyle(
@@ -186,14 +179,14 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
                     ),
-                    label = { Text(text = "Height") })
+                    label = { Text(text = "Рост") })
                 transaction {
                     Person.findById(1)!!.weight = weight.value.toInt()
                 }
             }
         },
         {
-            Column() {
+            Column {
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -212,13 +205,15 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                     valueRange = 1000f..1900.0f,
                     modifier = Modifier.width(300.dp)
                 )
-                Text(text = dailyActive.toString(),style = TextStyle(
-                    fontSize = 12.sp,
-                    lineHeight = 20.sp,
-                    fontWeight = FontWeight(800),
-                    textAlign = TextAlign.Center,
-                    letterSpacing = 0.1.sp
-                ), color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = dailyActive.toString(), style = TextStyle(
+                        fontSize = 12.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight(800),
+                        textAlign = TextAlign.Center,
+                        letterSpacing = 0.1.sp
+                    ), color = MaterialTheme.colorScheme.primary
+                )
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -227,11 +222,11 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                         "Для малоподвижных людей, тренировок мало или они отсутствуют"
                     } else if (dailyActive <= 1375) {
                         "Для людей с низкой активностью, легкие тренировки 1-3 раза в неделю или в виде эквивалента другой активности."
-                    } else if(dailyActive <= 1550){
+                    } else if (dailyActive <= 1550) {
                         "Для умеренно активных людей: физическая работа средней тяжести или регулярные тренировки 3-5 дней в неделю."
-                    } else if(dailyActive <= 1725){
+                    } else if (dailyActive <= 1725) {
                         "Для очень активных людей: физическая работа полный день или интенсивные тренировки 6-7 раз в неделю."
-                    } else{
+                    } else {
                         "Для предельно активных людей: тяжелая физическая работа и интенсивные тренировки/занятия спортом."
                     }, style = TextStyle(
                         fontSize = 20.sp,
@@ -247,7 +242,7 @@ fun FirstTimeScreenMain(navController: NavHostController) {
             }
         },
         {
-            Column() {
+            Column {
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -296,10 +291,14 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                                 }
                                 val currentDate = Calendar.getInstance()
 
-                                var age = currentDate.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR)
+                                var age =
+                                    currentDate.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR)
 
                                 // Добавьте проверку для случая, если день рождения в этом году еще не наступил
-                                if (currentDate.get(Calendar.DAY_OF_YEAR) < selectedDate.get(Calendar.DAY_OF_YEAR)) {
+                                if (currentDate.get(Calendar.DAY_OF_YEAR) < selectedDate.get(
+                                        Calendar.DAY_OF_YEAR
+                                    )
+                                ) {
                                     age--
                                 }
 
@@ -310,7 +309,8 @@ fun FirstTimeScreenMain(navController: NavHostController) {
                                     transaction {
                                         Person.findById(1)!!.age = age
                                     }
-                                    date.value = SimpleDateFormat("MM/dd/yyyy").format(Date(datePickerState.selectedDateMillis!!))
+                                    date.value =
+                                        SimpleDateFormat("MM/dd/yyyy", Locale.ROOT).format(Date(datePickerState.selectedDateMillis!!))
                                     isVisible = false
                                 } else {
                                     println("Недопустимый возраст: $ageString")

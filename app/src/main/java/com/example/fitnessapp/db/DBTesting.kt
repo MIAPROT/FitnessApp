@@ -1,13 +1,7 @@
 package com.example.fitnessapp.db
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.fitnessapp.ui.theme.FitnessAppTheme
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,23 +13,23 @@ fun DBTesting() {
         transaction {
 
             SchemaUtils.create(
-                Muscular_Types,
-                IndividualExcercises,
+                MuscularTypes,
+                IndividualExercises,
                 ReadyMadeWorkouts,
-                ReadyMadeWorkouts_Idividual_Exercises,
-                DoneExcercises,
+                ReadyMadeWorkoutsIndividualExercises,
+                DoneExercises,
                 Persons
             )
-            Muscular_Type.new { name = "" }
-            Muscular_Type.new { name = "пресс" }
-            Muscular_Type.new { name = "грудь" }
-            Muscular_Type.new { name = "бицепс" }
-            Muscular_Type.new { name = "трицепс" }
-            Muscular_Type.new { name = "плечи" }
-            Muscular_Type.new { name = "спина" }
-            Muscular_Type.new { name = "квадрицепс" }
-            Muscular_Type.new { name = "икроножные" }
-            Muscular_Type.new { name = "ягодичные" }
+            MuscularType.new { name = "" }
+            MuscularType.new { name = "пресс" }
+            MuscularType.new { name = "грудь" }
+            MuscularType.new { name = "бицепс" }
+            MuscularType.new { name = "трицепс" }
+            MuscularType.new { name = "плечи" }
+            MuscularType.new { name = "спина" }
+            MuscularType.new { name = "квадрицепс" }
+            MuscularType.new { name = "икроножные" }
+            MuscularType.new { name = "ягодичные" }
 
             Person.new{
                 age = 30
@@ -45,14 +39,14 @@ fun DBTesting() {
             }
 
 
-            println("Muscular_types: ${Muscular_Type.all().forEach { println(it.name) }}")
+            println("Muscular_types: ${MuscularType.all().forEach { println(it.name) }}")
 
         }
 
         transaction {
             transaction {
 
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Подъём корпуса на пресс"
                     muscular_id = 2
                     link = "FWk-bfKceEU"
@@ -62,7 +56,7 @@ fun DBTesting() {
                             "Округлите спину и медленно усилием мышц живота поднимайте плечевой пояс по направлению к тазу. \n" +
                             "Старайтесь максимально напрячь мышцы пресса."
                 }
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Планка на пресс"
                     muscular_id = 2
                     link = "FjgCni0fhUA"
@@ -74,7 +68,7 @@ fun DBTesting() {
                             "Держите ровную линию тела с помощью напряжения пресса и слегка подкручивайте таз к животу."
                 }
 
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Классические отжимания"
                     muscular_id = 3
                     link = "c902b5g8w0A"
@@ -86,7 +80,7 @@ fun DBTesting() {
                             "На выдохе плавно подняться и повторить."
                 }
 
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Подъем на бицепс штанги/гантелей стоя"
                     muscular_id = 4
                     link = "3epc8Xb_lwg"
@@ -98,7 +92,7 @@ fun DBTesting() {
                             "3.Удержать его в этом состоянии на 2-3 секунды.\n" +
                             "4.Максимально медленно опустить его вниз, не полностью разгибая руки в локтях."
                 }
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Обратные отжимания"
                     muscular_id = 5
                     link = "olH5e5UnUo8"
@@ -109,7 +103,7 @@ fun DBTesting() {
                             "На выдохе, оттолкнувшись от скамьи, выпрямите локти и вернитесь в исходное положение.\n" +
                             "Не сутультесь. старайтесь опускать плечи, не подтягивайте их к ушам, когда опускаете и поднимаете тело."
                 }
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Подъёмы (махи) перед собой"
                     muscular_id = 6
                     link = "1bTI7uhoWmw"
@@ -119,7 +113,7 @@ fun DBTesting() {
                             "2.Без рывка и инерции поднимите руки перед собой, зафиксировав их на мгновение на уровне плеч. Выше поднимать не нужно – нагрузка с дельт уходит на трапецию.\n" +
                             "3.Медленно верните руки в ИП."
                 }
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Подтягивания"
                     muscular_id = 7
                     link = "eGo4IYlbE5g"
@@ -131,7 +125,7 @@ fun DBTesting() {
                             "Избегайте рывков при подъеме и обрывов при обратном движении, выполняйте упражнение плавно.\n" +
                             "Выпрямите руки и вернитесь в исходное положение."
                 }
-                IndividualExcercise.new {
+                IndividualExercise.new {
                     name = "Фронтальные приседания со штангой"
                     muscular_id = 8
                     link = "2FpY2DFvoQw"
@@ -146,19 +140,19 @@ fun DBTesting() {
                 name = "Тренировка на пресс"
                 description = "Тренировка на прес дома\nЛёгкая тренировка при помощи подручных средств\n10 упражнений\n10 минут"
                 image = "https://sportishka.com/uploads/posts/2022-11/1667517758_12-sportishka-com-p-podem-korpusa-na-press-vkontakte-12.jpg"
-                readyMadeWorkouts = SizedCollection(listOf(IndividualExcercise.findById(1)!!,IndividualExcercise.findById(2)!!))
+                readyMadeWorkouts = SizedCollection(listOf(IndividualExercise.findById(1)!!,IndividualExercise.findById(2)!!))
             }
             ReadyMadeWorkout.new(){
                 name = "Тренировка на верхнюю часть тела"
                 description = "Тренировка на верхнюю часть тела\nЛёгкая тренировка при помощи подручных средств\n6 упражнений\n15 минут"
                 image = "https://avatars.dzeninfra.ru/get-zen_doc/4715514/pub_602cbbef2ca49f594850afa1_602ccbccaca27a71a62c7552/scale_1200"
-                readyMadeWorkouts = SizedCollection(listOf(IndividualExcercise.findById(1)!!,IndividualExcercise.findById(3)!!,IndividualExcercise.findById(4)!!,IndividualExcercise.findById(5)!!,IndividualExcercise.findById(6)!!,IndividualExcercise.findById(7)!!))
+                readyMadeWorkouts = SizedCollection(listOf(IndividualExercise.findById(1)!!,IndividualExercise.findById(3)!!,IndividualExercise.findById(4)!!,IndividualExercise.findById(5)!!,IndividualExercise.findById(6)!!,IndividualExercise.findById(7)!!))
             }
-            DoneExcercise.new{
-                individualExcercises = IndividualExcercise.findById(1)!!.id
+            DoneExercise.new{
+                individualExcercises = IndividualExercise.findById(1)!!.id
                 readyMadeWorkouts = null
             }
-            DoneExcercise.new{
+            DoneExercise.new{
                 individualExcercises = null
                 readyMadeWorkouts = ReadyMadeWorkout.findById(1)!!.id
             }

@@ -11,14 +11,13 @@ import kotlinx.datetime.Clock.System.now
 
 // Constants for notification
 var notificationID = now().epochSeconds.toInt()
-const val channelID = "channel1"
+const val channelID = "reminders"
 const val titleExtra = "titleExtra"
 const val messageExtra = "messageExtra"
 class Notification : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        // Build the notification using NotificationCompat.Builder
         val notification = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(intent.getStringExtra(titleExtra)) // Set title from intent

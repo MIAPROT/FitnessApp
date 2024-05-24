@@ -14,7 +14,7 @@ object ReadyMadeWorkouts : IntIdTable() {
     val image: Column<String> = varchar("image",10000)
 }
 
-object Muscular_Types : IntIdTable(){
+object MuscularTypes : IntIdTable(){
     val name: Column<String> = varchar("name", length = 300)
 }
 
@@ -33,39 +33,39 @@ class Person(id: EntityID<Int>) : IntEntity(id){
     var activity by Persons.activity
 }
 
-object IndividualExcercises: IntIdTable(){
+object IndividualExercises: IntIdTable(){
     val name: Column<String> = varchar("name", length = 600)
-    val muscular_id: Column<Int> = integer("muscular_id").references(Muscular_Types.id)
+    val muscular_id: Column<Int> = integer("muscular_id").references(MuscularTypes.id)
     val link: Column<String> = varchar("link", length = 400)
     var timer: Column<Int> = integer("timer")
     val description: Column<String> = varchar("description", length = 1000)
     val image: Column<String> = varchar("image",10000)
 }
 
-class IndividualExcercise(id: EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<IndividualExcercise>(IndividualExcercises)
-    var name by IndividualExcercises.name
-    var muscular_id by IndividualExcercises.muscular_id
-    var link by IndividualExcercises.link
-    var timer by IndividualExcercises.timer
-    var description by IndividualExcercises.description
-    var image by IndividualExcercises.image
+class IndividualExercise(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<IndividualExercise>(IndividualExercises)
+    var name by IndividualExercises.name
+    var muscular_id by IndividualExercises.muscular_id
+    var link by IndividualExercises.link
+    var timer by IndividualExercises.timer
+    var description by IndividualExercises.description
+    var image by IndividualExercises.image
 }
 
-object DoneExcercises: IntIdTable(){
+object DoneExercises: IntIdTable(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts).nullable()
-    val individualExcercises = reference("IndividualExcercises", IndividualExcercises).nullable()
+    val individualExcercises = reference("IndividualExcercises", IndividualExercises).nullable()
 }
 
-class DoneExcercise(id: EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<DoneExcercise>(DoneExcercises)
-    var readyMadeWorkouts by DoneExcercises.readyMadeWorkouts
-    var individualExcercises by DoneExcercises.individualExcercises
+class DoneExercise(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<DoneExercise>(DoneExercises)
+    var readyMadeWorkouts by DoneExercises.readyMadeWorkouts
+    var individualExcercises by DoneExercises.individualExcercises
 }
 
-object ReadyMadeWorkouts_Idividual_Exercises: Table(){
+object ReadyMadeWorkoutsIndividualExercises: Table(){
     val readyMadeWorkouts = reference("ReadyMadeWorkouts", ReadyMadeWorkouts)
-    val individualExcercises = reference("IndividualExcercises", IndividualExcercises)
+    val individualExcercises = reference("IndividualExcercises", IndividualExercises)
     override val primaryKey = PrimaryKey(readyMadeWorkouts, individualExcercises)
 }
 
@@ -75,12 +75,12 @@ class ReadyMadeWorkout(id: EntityID<Int>) : IntEntity(id){
     var name by ReadyMadeWorkouts.name
     var description by ReadyMadeWorkouts.description
     var image by ReadyMadeWorkouts.image
-    var readyMadeWorkouts by IndividualExcercise via ReadyMadeWorkouts_Idividual_Exercises
+    var readyMadeWorkouts by IndividualExercise via ReadyMadeWorkoutsIndividualExercises
 }
 
-class Muscular_Type(id: EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<Muscular_Type>(Muscular_Types)
-    var name by Muscular_Types.name
+class MuscularType(id: EntityID<Int>) : IntEntity(id){
+    companion object : IntEntityClass<MuscularType>(MuscularTypes)
+    var name by MuscularTypes.name
 }
 
 /*class ReadyMadeWorkout_Idividual_Exercise(id: EntityID<Int>) : IntEntity(id){

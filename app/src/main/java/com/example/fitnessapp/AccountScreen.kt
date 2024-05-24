@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +42,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerLayoutType
@@ -55,6 +58,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -74,11 +78,18 @@ import com.example.fitnessapp.db.Persons.height
 import com.example.fitnessapp.db.Persons.weight
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toJavaZoneId
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.not
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
 import kotlin.time.Duration
@@ -92,18 +103,18 @@ fun AccountScreen() {
     var isNotificationVisible by remember {
         mutableStateOf(false)
     }
-    var weight = remember {
+    val weight = remember {
         mutableStateOf("")
     }
-    var height = remember {
+    val height = remember {
         mutableStateOf("")
     }
-    var date = remember {
+    val date = remember {
         mutableStateOf("")
     }
 
-    var notification_date: Instant = remember {
-        Instant.fromEpochMilliseconds(0)
+    var notification_date: Instant? by remember {
+        mutableStateOf(null)
     }
     var isDatePickerVisible by remember {
         mutableStateOf(false)
@@ -114,12 +125,13 @@ fun AccountScreen() {
     var isCalculatorVisible by remember {
         mutableStateOf(false)
     }
-    var message = remember {
+    val message = remember {
         mutableStateOf("")
     }
     var isEditing by remember { mutableStateOf(false) }
     var dailyActive by remember { mutableStateOf(0f) }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = 1578096000000)
+    val dateNotificationPicker = rememberDatePickerState()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
@@ -131,45 +143,32 @@ fun AccountScreen() {
 
     { contentPadding ->
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(contentPadding), contentAlignment = Alignment.Center)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .padding(16.dp), contentAlignment = Alignment.Center
+        )
         {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
-                LaunchedEffect(null ){
-                    transaction { weight.value = Person.findById(1)!!.weight.toString()
-                     height.value = Person.findById(1)!!.height.toString()
-                     dailyActive = Person.findById(1)!!.activity.toFloat() }
+                LaunchedEffect(null) {
+                    transaction {
+                        weight.value = Person.findById(1)!!.weight.toString()
+                        height.value = Person.findById(1)!!.height.toString()
+                        dailyActive = Person.findById(1)!!.activity.toFloat()
+                    }
 
                 }
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Дата рождения", style = TextStyle(
-                        fontSize = 20.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
-                )
                 OutlinedTextField(
-                    value = date.value, /*TODO*/
+                    value = date.value,
                     onValueChange = { newText -> date.value = newText },
                     trailingIcon = {
                         IconButton(onClick = { isDatePickerVisible = true }) {
                             Icon(Icons.Default.DateRange, contentDescription = null)
                         }
                     },
-                    label = { Text(text = "Date") },enabled = isEditing)
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Вес", style = TextStyle(
-                        fontSize = 20.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
+                    label = { Text(text = "Дата рождения") }, enabled = isEditing,
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = weight.value,
@@ -182,16 +181,8 @@ fun AccountScreen() {
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
                     ),
-                    label = { Text(text = "Weight") },enabled = isEditing)
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Рост", style = TextStyle(
-                        fontSize = 20.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
+                    label = { Text(text = "Вес") }, enabled = isEditing,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
@@ -205,84 +196,111 @@ fun AccountScreen() {
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
                     ),
-                    label = { Text(text = "Height") },enabled = isEditing)
+                    label = { Text(text = "Рост") }, enabled = isEditing,
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Дневная активность", style = TextStyle(
-                        fontSize = 20.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
+                    "Дневная активность",
+                    modifier = Modifier.padding(top = 24.dp),
+                    style = MaterialTheme.typography.labelLarge
                 )
                 Slider(
-                    value = dailyActive,
+                    value = dailyActive.toInt().toFloat(),
                     onValueChange = { dailyActive = it },
                     valueRange = 1000f..1900.0f,
-                    modifier = Modifier.width(300.dp),enabled = isEditing
+                    modifier = Modifier.width(300.dp), enabled = isEditing,
                 )
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .width(300.dp),
+                        .fillMaxWidth(),
                     text = if (dailyActive <= 1200) {
                         "Для малоподвижных людей, тренировок мало или они отсутствуют"
                     } else if (dailyActive <= 1375) {
                         "Для людей с низкой активностью, легкие тренировки 1-3 раза в неделю или в виде эквивалента другой активности."
-                    } else if(dailyActive <= 1550){
+                    } else if (dailyActive <= 1550) {
                         "Для умеренно активных людей: физическая работа средней тяжести или регулярные тренировки 3-5 дней в неделю."
-                    } else if(dailyActive <= 1725){
+                    } else if (dailyActive <= 1725) {
                         "Для очень активных людей: физическая работа полный день или интенсивные тренировки 6-7 раз в неделю."
-                    } else{
+                    } else {
                         "Для предельно активных людей: тяжелая физическая работа и интенсивные тренировки/занятия спортом."
                     }, style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 20.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight(400),
+                        textAlign = TextAlign.Left,
                         letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
+                    ), color = MaterialTheme.colorScheme.tertiary
                 )
-                Text(text = (dailyActive).toString(), style = TextStyle(
-                    fontSize = 12.sp,
-                    lineHeight = 20.sp,
-                    fontWeight = FontWeight(800),
-                    textAlign = TextAlign.Center,
-                    letterSpacing = 0.1.sp
-                ), color = MaterialTheme.colorScheme.primary)
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    OutlinedButton(onClick = { isEditing = !isEditing }) {
-                    if(isEditing){Text(text = "Отменить")}else{Text(text = "Изменить")}
-                    }
-                    Button(onClick = { scope.launch {
-                        snackbarHostState.showSnackbar("Данные сохранены!")
-                    }
-                    transaction { Person.findById(1)!!.weight = weight.value.toInt()
-                        Person.findById(1)!!.height = height.value.toInt()
-                        Person.findById(1)!!.activity = dailyActive.toInt()
-                        println(Person.findById(1)!!.activity.toString())
-                        println(((((Person.findById(1)!!.weight)*10)+((Person.findById(1)!!.height)*6.25)-(5*(Person.findById(1)!!.age))+5)*(Person.findById(1)!!.activity/1000)).toInt())}}) {
-                        Text(text = "Сохранить")
-                    }
-                    IconButton(onClick = { isCalculatorVisible = true }) {
-                        Icon(Icons.Default.Face, contentDescription = null)
+                Text(
+                    text = "Выбранное значение: $dailyActive", style = TextStyle(
+                        fontSize = 12.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight(800),
+                        textAlign = TextAlign.Left,
+                        letterSpacing = 0.1.sp
+                    ), color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 24.dp)
+                        .fillMaxWidth()
+                )
+                Button(
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Данные сохранены!")
+                        }
+                        transaction {
+                            Person.findById(1)!!.weight = weight.value.toInt()
+                            Person.findById(1)!!.height = height.value.toInt()
+                            Person.findById(1)!!.activity = dailyActive.toInt()
+                            println(Person.findById(1)!!.activity.toString())
+                            println(
+                                ((((Person.findById(1)!!.weight) * 10) + ((Person.findById(1)!!.height) * 6.25) - (5 * (Person.findById(
+                                    1
+                                )!!.age)) + 5) * (Person.findById(1)!!.activity / 1000)).toInt()
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Сохранить")
+                }
+                OutlinedButton(
+                    onClick = { isEditing = !isEditing },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (isEditing) {
+                        Text(text = "Отменить")
+                    } else {
+                        Text(text = "Изменить")
                     }
                 }
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically) {
-                    Button(onClick = { isNotificationVisible = true}) {
-                        Text(text = "Нопоминания")
-                    }
+                OutlinedButton(
+                    onClick = { isNotificationVisible = true },
+                    Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Напоминания")
                 }
-
+                OutlinedButton(
+                    onClick = { isCalculatorVisible = true },
+                    Modifier.fillMaxWidth()
+                ) {
+                    Text("Калькулятор калорий")
+                }
             }
         }
         if (isDatePickerVisible)
-            AlertDialog(onDismissRequest = { isDatePickerVisible = false }) {
-                Surface {
-                    Column {
+            Dialog(onDismissRequest = { isDatePickerVisible = false }) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Column(
+                        Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
                         DatePicker(state = datePickerState)
                         Button(onClick = {
                             if (datePickerState.selectedDateMillis != null) {
@@ -291,11 +309,14 @@ fun AccountScreen() {
                                 }
                                 val currentDate = Calendar.getInstance()
 
-                                var age = currentDate.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR)
+                                var age =
+                                    currentDate.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR)
 
                                 // Добавьте проверку для случая, если день рождения в этом году еще не наступил
                                 if (currentDate.get(Calendar.DAY_OF_YEAR) < selectedDate.get(
-                                        Calendar.DAY_OF_YEAR)) {
+                                        Calendar.DAY_OF_YEAR
+                                    )
+                                ) {
                                     age--
                                 }
 
@@ -306,14 +327,15 @@ fun AccountScreen() {
                                     transaction {
                                         Person.findById(1)!!.age = age
                                     }
-                                    date.value = SimpleDateFormat("MM/dd/yyyy").format(Date(datePickerState.selectedDateMillis!!))
+                                    date.value =
+                                        SimpleDateFormat("MM/dd/yyyy").format(Date(datePickerState.selectedDateMillis!!))
                                     isDatePickerVisible = false
                                 } else {
                                     println("Недопустимый возраст: $ageString")
                                 }
                             }
                         }) {
-                            Text(text = "Ok!")
+                            Text(text = "Oк")
                         }
                     }
                 }
@@ -325,20 +347,22 @@ fun AccountScreen() {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(600.dp),
+                        .padding(16.dp),
                     shape = RoundedCornerShape(16.dp),
                 ) {
-                    Column(Modifier.padding(16.dp)) {
+                    Column(
+                        Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
                         OutlinedTextField(
                             value = notification_date.toString(),
-                            onValueChange = {  },
+                            onValueChange = { },
                             trailingIcon = {
                                 IconButton(onClick = { isDatePickerNotificationVisible = true }) {
                                     Icon(Icons.Default.DateRange, contentDescription = null)
                                 }
                             },
-                            label = { Text(text = "Date") })
+                            label = { Text(text = "Дата") })
                         val timePickerStateHorizontal = rememberTimePickerState()
                         TimePicker(
                             state = timePickerStateHorizontal,
@@ -347,40 +371,46 @@ fun AccountScreen() {
                         OutlinedTextField(
                             value = message.value,
                             onValueChange = { newText -> message.value = newText },
-                            label = { Text(text = "Текст") }, modifier = Modifier.padding(bottom = 8.dp))
-
+                            label = { Text(text = "Сообщение") },
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
 
 
                         val context = LocalContext.current
                         Button(onClick = {
-                            @SuppressLint("ScheduleExactAlarm")
-                            val intent = Intent(context, Notification:: class.java)
+                            val intent = Intent(context, Notification::class.java)
                             intent.putExtra(titleExtra, "Уведомление")
-                            intent.putExtra(messageExtra,message.value)
+                            intent.putExtra(messageExtra, message.value)
                             val pendingIntent = PendingIntent.getBroadcast(
                                 context,
-                                notificationID,
+                                Clock.System.now().epochSeconds.toInt(),
                                 intent,
-                                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                                PendingIntent.FLAG_IMMUTABLE
                             )
-                            val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
-
-                            notification_date = notification_date + Duration.parse("${timePickerStateHorizontal.hour}h ${timePickerStateHorizontal.minute}m")
-
-
-                            // Get the selected time and schedule the notification
+                            val alarmManager =
+                                context.getSystemService(ALARM_SERVICE) as AlarmManager
+                            notification_date =
+                                Instant.fromEpochMilliseconds(dateNotificationPicker.selectedDateMillis!!) + Duration.parse(
+                                    "${timePickerStateHorizontal.hour}h ${timePickerStateHorizontal.minute}m"
+                                )
+                            // Get time zone in milliseconds
+                            val timeZone = TimeZone.currentSystemDefault()
+                            // Use kotlin
+                            val timeZoneOffsetMillis = TimeZone.currentSystemDefault().toJavaZoneId().rules.getOffset(
+                                Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds()).toJavaInstant()
+                            )
                             alarmManager.setExactAndAllowWhileIdle(
                                 AlarmManager.RTC_WAKEUP,
-                                notification_date.toEpochMilliseconds(),
+                                notification_date!!.toEpochMilliseconds() - timeZoneOffsetMillis.totalSeconds * 1000L,
                                 pendingIntent
                             )
                         }) {
                             Text(text = "Отправить")
                         }
-                        Button(onClick = {
+                        TextButton(onClick = {
                             isNotificationVisible = false
 
-                        }){
+                        }) {
                             Text(text = "Выйти")
                         }
 
@@ -390,18 +420,29 @@ fun AccountScreen() {
             }
         }
         if (isDatePickerNotificationVisible)
-            AlertDialog(onDismissRequest = { isDatePickerNotificationVisible = false }) {
-                Surface {
-                    Column {
-                        DatePicker(state = datePickerState)
-                        Button(onClick = {
-                            if (datePickerState.selectedDateMillis != null) {
-                                notification_date = Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
-
-                                isDatePickerNotificationVisible = false
-                            }
-                        }) {
-                            Text(text = "Ok!")
+            Dialog(onDismissRequest = { isDatePickerNotificationVisible = false }) {
+                Card(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Column(Modifier.padding(16.dp)) {
+                        DatePicker(
+                            state = dateNotificationPicker,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                        Button(
+                            onClick = {
+                                if (dateNotificationPicker.selectedDateMillis != null) {
+                                    notification_date =
+                                        Instant.fromEpochMilliseconds(dateNotificationPicker.selectedDateMillis!!)
+                                    println(notification_date)
+                                    isDatePickerNotificationVisible = false
+                                }
+                            },
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        ) {
+                            Text(text = "Ок")
                         }
                     }
                 }
@@ -411,21 +452,18 @@ fun AccountScreen() {
 
 
         if (isCalculatorVisible)
-            AlertDialog(onDismissRequest = { isCalculatorVisible = false }) {
+            Dialog(onDismissRequest = { isCalculatorVisible = false }) {
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(400.dp),
+                        .padding(16.dp),
                     shape = RoundedCornerShape(16.dp),
                 ) {
                     Column(Modifier.padding(16.dp)) {
-                        //elements for notifications
                         CalculatorScreen()
-                        Button(onClick = {
+                        TextButton(onClick = {
                             isCalculatorVisible = false
                         }) {
-                            Text(text = "Ok")
+                            Text(text = "Oк")
                         }
                     }
                 }
@@ -443,5 +481,5 @@ fun AccountScreenPrev() {
             AccountScreen()
         }
     }
-    
+
 }

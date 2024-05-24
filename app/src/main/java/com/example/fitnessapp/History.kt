@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.fitnessapp.components.CardList
-import com.example.fitnessapp.db.DoneExcercise
-import com.example.fitnessapp.db.IndividualExcercise
+import com.example.fitnessapp.db.DoneExercise
+import com.example.fitnessapp.db.IndividualExercise
 import com.example.fitnessapp.db.ReadyMadeWorkout
 import com.example.fitnessapp.models.TrainingCardDTO
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -21,19 +21,19 @@ fun HistoryScreen(navController: NavHostController) {
         mutableStateListOf<TrainingCardDTO>()
     }
     transaction {
-        DoneExcercise.all().forEach() { exercise ->
+        DoneExercise.all().forEach() { exercise ->
             if (exercise.readyMadeWorkouts == null) {
                 cardList.add(
                     TrainingCardDTO(
-                        name = IndividualExcercise.findById(exercise.individualExcercises!!)!!.name,
+                        name = IndividualExercise.findById(exercise.individualExcercises!!)!!.name,
                         description = "",
-                        image = IndividualExcercise.findById(exercise.individualExcercises!!)!!.image,
-                        showdate = false,
-                        destonation = "",
-                        timer = IndividualExcercise.findById(exercise.individualExcercises!!)!!.timer,
-                        muscular_type = IndividualExcercise.findById(exercise.individualExcercises!!)!!.muscular_id
+                        image = IndividualExercise.findById(exercise.individualExcercises!!)!!.image,
+                        showDate = false,
+                        destination = "",
+                        timer = IndividualExercise.findById(exercise.individualExcercises!!)!!.timer,
+                        muscularType = IndividualExercise.findById(exercise.individualExcercises!!)!!.muscular_id
                             ?: 1,
-                        link = IndividualExcercise.findById(exercise.individualExcercises!!)!!.link,
+                        link = IndividualExercise.findById(exercise.individualExcercises!!)!!.link,
                         id = 0
                     )
                 )
@@ -43,10 +43,10 @@ fun HistoryScreen(navController: NavHostController) {
                         name = ReadyMadeWorkout.findById(exercise.readyMadeWorkouts!!)!!.name,
                         description = "",
                         image = ReadyMadeWorkout.findById(exercise.readyMadeWorkouts!!)!!.image,
-                        showdate = false,
-                        destonation = "",
+                        showDate = false,
+                        destination = "",
                         timer = 0,
-                        muscular_type = 1,
+                        muscularType = 1,
                         link = "",
                         id = 0
                     )

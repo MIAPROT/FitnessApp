@@ -56,11 +56,11 @@ fun TimerBar(timerdelay: Int) {
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(
+                progress = { ticks.toFloat() / timerdelay },
                 modifier = Modifier
                     .size(100.dp)
                     .padding(4.dp),
-                progress = ticks.toFloat() / timerdelay,
-                strokeWidth = 10.dp
+                strokeWidth = 10.dp,
             )
             Text(
                 text = "$ticks", style = TextStyle(

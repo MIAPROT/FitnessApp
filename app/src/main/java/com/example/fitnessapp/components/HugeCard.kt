@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.fitnessapp.db.Db
-import com.example.fitnessapp.db.DoneExcercise
-import com.example.fitnessapp.db.IndividualExcercise
+import com.example.fitnessapp.db.DoneExercise
+import com.example.fitnessapp.db.IndividualExercise
 import com.example.fitnessapp.db.ReadyMadeWorkout
 import com.example.fitnessapp.models.ReadyWorkoutCardDTO
 import com.example.fitnessapp.models.TrainingCardDTO
@@ -50,22 +50,22 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
     var isCalculatorVisible by remember {
         mutableStateOf(false)
     }
-    var sampleItems = remember {
+    val sampleItems = remember {
         mutableStateListOf<TrainingCardDTO>()
     }
     LaunchedEffect(null) {
-        card.listOfExcerises.forEach { exercise ->
+        card.listOfExercises.forEach { exercise ->
             sampleItems.add(
                 TrainingCardDTO(
-                    name = transaction { IndividualExcercise.findById(exercise)!!.name },
-                    description = transaction { IndividualExcercise.findById(exercise)!!.description },
+                    name = transaction { IndividualExercise.findById(exercise)!!.name },
+                    description = transaction { IndividualExercise.findById(exercise)!!.description },
                     image = "",
-                    showdate = false,
-                    destonation = "",
-                    timer = transaction { IndividualExcercise.findById(exercise)!!.timer },
-                    muscular_type = transaction { IndividualExcercise.findById(exercise)!!.muscular_id }
+                    showDate = false,
+                    destination = "",
+                    timer = transaction { IndividualExercise.findById(exercise)!!.timer },
+                    muscularType = transaction { IndividualExercise.findById(exercise)!!.muscular_id }
                         ?: 1,
-                    link = transaction { IndividualExcercise.findById(exercise)!!.link },
+                    link = transaction { IndividualExercise.findById(exercise)!!.link },
                     id = 0
                 )
             )
@@ -87,7 +87,7 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
             .clickable {
                 isCalculatorVisible = true
                 transaction {
-                    DoneExcercise.new {
+                    DoneExercise.new {
                         individualExcercises = null
                         readyMadeWorkouts = ReadyMadeWorkout.findById(card.id)!!.id
                     }
@@ -103,22 +103,21 @@ fun HugeCard(card: ReadyWorkoutCardDTO) {
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
+                    .height(60.dp)
+                    .border(
+                        BorderStroke(0.dp, colorScheme.outline),
+                        RoundedCornerShape(8.dp)
+                    ),
                 contentScale = ContentScale.FillWidth
             )
             Text(text = card.name, style = typography.titleMedium)
             Text(
-                text = card.description.toString(),
-                style = typography.labelSmall
+                text = card.description,
+                style = typography.bodyMedium
             )
             Text(
                 text = card.information,
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    lineHeight = 20.sp,
-                    fontWeight = FontWeight(800),
-                    letterSpacing = 0.1.sp
-                ), color = colorScheme.primary
+                style = MaterialTheme.typography.bodySmall, color = colorScheme.primary
             )
         }
 
@@ -137,7 +136,7 @@ fun HugeCardPreview() {
                     "Кардио тренировка дома",
                     "",
                     "Лёгкая кардио тренировка при помощи подручных средств. \n10 упражнений\n" +
-                            "15 минут", listOfExcerises = listOf(1, 3, 4), 1
+                            "15 минут", listOfExercises = listOf(1, 3, 4), 1
                 )
             )
         }

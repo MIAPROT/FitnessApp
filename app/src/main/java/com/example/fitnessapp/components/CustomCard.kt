@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,16 +24,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.fitnessapp.db.Db
-import com.example.fitnessapp.db.Muscular_Type
+import com.example.fitnessapp.db.MuscularType
 import com.example.fitnessapp.models.TrainingCardDTO
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 import org.jetbrains.exposed.sql.transactions.transaction
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Card(card: TrainingCardDTO, modifier: Modifier) {
+fun CustomCard(card: TrainingCardDTO, modifier: Modifier) {
     Db
-    var text_description by remember { mutableStateOf("") }
+    var textDescription by remember { mutableStateOf("") }
 
     Card(
         modifier
@@ -56,11 +54,15 @@ fun Card(card: TrainingCardDTO, modifier: Modifier) {
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp),
-                    contentScale = ContentScale.FillWidth
+                        .height(60.dp)
+                        .border(
+                            BorderStroke(0.dp, MaterialTheme.colorScheme.outline),
+                            RoundedCornerShape(8.dp)
+                        ),
+                    contentScale = ContentScale.FillWidth,
                 )
                 Text(text = card.name, style = MaterialTheme.typography.titleMedium)
-                if (card.showdate) {
+                if (card.showDate) {
                     Text(
                         text = card.date.toString(),
                         modifier = Modifier.padding(top = 8.dp),
@@ -74,10 +76,10 @@ fun Card(card: TrainingCardDTO, modifier: Modifier) {
                     )
                 }
                 transaction {
-                    text_description = Muscular_Type.findById(card.muscular_type)!!.name
+                    textDescription = MuscularType.findById(card.muscularType)!!.name
                 }
                 Text(
-                    text = text_description, style = TextStyle(
+                    text = textDescription, style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 20.sp,
                         fontWeight = FontWeight(800),
@@ -96,15 +98,15 @@ fun Card(card: TrainingCardDTO, modifier: Modifier) {
 fun CardPreview() {
     FitnessAppTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Card(
+            CustomCard(
                 TrainingCardDTO(
                     "Тест2",
                     "Тест",
                     "https://webpulse.imgsmail.ru/imgpreview?mb=webpulse&key=pulse_cabinet-image-6ed916c1-76f0-4e4a-8b29-f4a1742651e6",
                     false,
-                    destonation = "",
+                    destination = "",
                     timer = 10,
-                    muscular_type = 1,
+                    muscularType = 1,
                     link = "",
                     id = 1
                 ), Modifier

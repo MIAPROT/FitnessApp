@@ -12,8 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.fitnessapp.db.Db
-import com.example.fitnessapp.db.DoneExcercise
-import com.example.fitnessapp.db.IndividualExcercise
+import com.example.fitnessapp.db.DoneExercise
+import com.example.fitnessapp.db.IndividualExercise
 import com.example.fitnessapp.models.TrainingCardDTO
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -28,32 +28,29 @@ fun CardList(
     var dialogCard: TrainingCardDTO? by remember {
         mutableStateOf(null)
     }
-    var InformationVisibility by remember {
+    var informationVisibility by remember {
         mutableStateOf(false)
     }
-    if (InformationVisibility)
-        AlertDialog(onDismissRequest = { InformationVisibility = false }) {
-
+    if (informationVisibility)
+        AlertDialog(onDismissRequest = { informationVisibility = false }) {
             TrainingCard(dialogCard!!)
-
         }
 
     LazyColumn(modifier = modifier) {
         items(cardList.size) {
-            val card = cardList.getOrNull(it)?: return@items
-            Card(
+            val card = cardList.getOrNull(it) ?: return@items
+            CustomCard(
                 card,
-                if (card.destonation.isNotEmpty()) Modifier.clickable { navController.navigate(card.destonation) } else Modifier.clickable {
-                    InformationVisibility = true
+                if (card.destination.isNotEmpty()) Modifier.clickable { navController.navigate(card.destination) } else Modifier.clickable {
+                    informationVisibility = true
                     dialogCard = card
                     transaction {
-                        DoneExcercise.new {
-                            individualExcercises = IndividualExcercise.findById(card.id)!!.id
+                        DoneExercise.new {
+                            individualExcercises = IndividualExercise.findById(card.id)!!.id
                             readyMadeWorkouts = null
                         }
                     }
                 })
-
         }
     }
 }

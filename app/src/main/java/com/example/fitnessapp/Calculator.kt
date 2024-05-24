@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -54,157 +55,132 @@ fun CalculatorScreen() {
         mutableStateOf(false)
     }
 
-    if(OpenAlertDialogInfo) {
+    if (OpenAlertDialogInfo) {
         AlertDialog(onDismissRequest = { OpenAlertDialogInfo = false }) {
             DialogCard(
-                MainText = "Калькулятор калорий определяет количество энергии, которое вам следует получать ежедневно, чтобы достичь ваших целей.",
-                SecondaryText = "Нажмайте на иконки за доп. информацией",
-                onClick = {OpenAlertDialogInfo = false}
+                mainText = "Калькулятор калорий определяет количество энергии, которое вам следует получать ежедневно, чтобы достичь ваших целей.",
+                secondaryText = "Нажмайте на иконки за доп. информацией",
+                onClick = { OpenAlertDialogInfo = false }
             )
 
         }
     }
-    if(OpenAlertDialogLightWeight) {
+    if (OpenAlertDialogLightWeight) {
         AlertDialog(onDismissRequest = { OpenAlertDialogLightWeight = false }) {
             DialogCard(
-                MainText = "Количество калорий необходимое для похудения",
-                SecondaryText = "",
-                onClick = {OpenAlertDialogLightWeight = false}
+                mainText = "Количество калорий необходимое для похудения",
+                secondaryText = "",
+                onClick = { OpenAlertDialogLightWeight = false }
             )
 
         }
     }
-    if(OpenAlertDialogHardWeight) {
+    if (OpenAlertDialogHardWeight) {
         AlertDialog(onDismissRequest = { OpenAlertDialogHardWeight = false }) {
             DialogCard(
-                MainText = "Количество калорий необходимое для набора массы",
-                SecondaryText = "",
-                onClick = {OpenAlertDialogHardWeight = false}
+                mainText = "Количество калорий необходимое для набора массы",
+                secondaryText = "",
+                onClick = { OpenAlertDialogHardWeight = false }
             )
 
         }
     }
-    if(OpenAlertDialogNormalWeight) {
+    if (OpenAlertDialogNormalWeight) {
         AlertDialog(onDismissRequest = { OpenAlertDialogNormalWeight = false }) {
             DialogCard(
-                MainText = "Количество калорий необходимое для поддержания веса",
-                SecondaryText = "",
-                onClick = {OpenAlertDialogNormalWeight = false}
+                mainText = "Количество калорий необходимое для поддержания веса",
+                secondaryText = "",
+                onClick = { OpenAlertDialogNormalWeight = false }
             )
 
         }
     }
 
-    Box(contentAlignment = Alignment.Center) {
-        Column(verticalArrangement = Arrangement.spacedBy(20.dp),horizontalAlignment = Alignment.CenterHorizontally) {
-            FlowRow(verticalArrangement = Arrangement.Center, horizontalArrangement = Arrangement.spacedBy(10.dp)){
-                Text(
-                    text = "Калькулятор калорий", style = TextStyle(
-                        fontSize = 30.sp,
-                        lineHeight = 30.sp,
-                        fontWeight = FontWeight(800),
-                        textAlign = TextAlign.End,
-                        letterSpacing = 0.1.sp
-                    ), color = MaterialTheme.colorScheme.primary
-                )
-                IconButton(onClick = { OpenAlertDialogInfo = true }) {
-                    Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(60.dp))
-                }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Калькулятор калорий", style = MaterialTheme.typography.titleLarge
+            )
+            IconButton(onClick = { OpenAlertDialogInfo = true }) {
+                Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(16.dp))
             }
-            Column(horizontalAlignment = Alignment.CenterHorizontally,verticalArrangement = Arrangement.spacedBy(10.dp) ) {
-                var NormalKcal by remember { mutableStateOf(0) }
-                transaction {
-                    NormalKcal = ((((Person.findById(1)!!.weight)*10)+((Person.findById(1)!!.height)*6.25)-(5*(Person.findById(1)!!.age))+5)*(Person.findById(1)!!.activity/1000)).toInt()
-                }
-                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    IconButton(onClick = { OpenAlertDialogLightWeight = true }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.lightweightbaby),
-                            contentDescription = null, modifier = Modifier.size(60.dp)
-                        )
-                    }
-                    Text(
-                        text = (NormalKcal-400).toString(), style = TextStyle(
-                            fontSize = 30.sp,
-                            lineHeight = 30.sp,
-                            fontWeight = FontWeight(800),
-                            textAlign = TextAlign.End,
-                            letterSpacing = 0.1.sp
-                        ), color = MaterialTheme.colorScheme.secondary
-                    )
-                    Text(
-                        text = "cal", style = TextStyle(
-                            fontSize = 30.sp,
-                            lineHeight = 30.sp,
-                            fontWeight = FontWeight(800),
-                            textAlign = TextAlign.End,
-                            letterSpacing = 0.1.sp
-                        ), color = MaterialTheme.colorScheme.primary
-                    )
-
-                }
-                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    IconButton(onClick = { OpenAlertDialogHardWeight = true }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.hardweightbaby),
-                            contentDescription = null, modifier = Modifier.size(60.dp)
-                        )
-                    }
-                    Text(
-                        text = (NormalKcal+500).toString(), style = TextStyle(
-                            fontSize = 30.sp,
-                            lineHeight = 30.sp,
-                            fontWeight = FontWeight(800),
-                            textAlign = TextAlign.End,
-                            letterSpacing = 0.1.sp
-                        ), color = MaterialTheme.colorScheme.secondary
-                    )
-                    Text(
-                        text = "cal", style = TextStyle(
-                            fontSize = 30.sp,
-                            lineHeight = 30.sp,
-                            fontWeight = FontWeight(800),
-                            textAlign = TextAlign.End,
-                            letterSpacing = 0.1.sp
-                        ), color = MaterialTheme.colorScheme.primary
-                    )
-
-                }
-                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    IconButton(onClick = { OpenAlertDialogNormalWeight = true }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.normalweightbaby),
-                            contentDescription = null, modifier = Modifier.size(60.dp)
-                        )
-                    }
-                    Text(
-                        text = NormalKcal.toString(), style = TextStyle(
-                            fontSize = 30.sp,
-                            lineHeight = 30.sp,
-                            fontWeight = FontWeight(800),
-                            textAlign = TextAlign.End,
-                            letterSpacing = 0.1.sp
-                        ), color = MaterialTheme.colorScheme.secondary
-                    )
-                    Text(
-                        text = "cal", style = TextStyle(
-                            fontSize = 30.sp,
-                            lineHeight = 30.sp,
-                            fontWeight = FontWeight(800),
-                            textAlign = TextAlign.End,
-                            letterSpacing = 0.1.sp
-                        ), color = MaterialTheme.colorScheme.primary
-                    )
-
-                }
-            }
-
         }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            var NormalKcal by remember { mutableStateOf(0) }
+            transaction {
+                NormalKcal =
+                    ((((Person.findById(1)!!.weight) * 10) + ((Person.findById(1)!!.height) * 6.25) - (5 * (Person.findById(
+                        1
+                    )!!.age)) + 5) * (Person.findById(1)!!.activity / 1000)).toInt()
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                IconButton(onClick = { OpenAlertDialogLightWeight = true }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.lightweightbaby),
+                        contentDescription = null, modifier = Modifier.size(48.dp)
+                    )
+                }
+                Text(
+                    text = (NormalKcal - 400).toString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = "калорий", style = MaterialTheme.typography.labelLarge
+                )
 
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                IconButton(onClick = { OpenAlertDialogHardWeight = true }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.hardweightbaby),
+                        contentDescription = null, modifier = Modifier.size(48.dp)
+                    )
+                }
+                Text(
+                    text = (NormalKcal + 500).toString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = "калорий", style = MaterialTheme.typography.labelLarge
+                )
+
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                IconButton(onClick = { OpenAlertDialogNormalWeight = true }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.normalweightbaby),
+                        contentDescription = null, modifier = Modifier.size(48.dp)
+                    )
+                }
+                Text(
+                    text = NormalKcal.toString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = "калорий", style = MaterialTheme.typography.labelLarge
+                )
+            }
+        }
     }
-
-
-
 }
 
 @Preview()
