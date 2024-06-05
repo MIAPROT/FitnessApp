@@ -31,7 +31,6 @@ import androidx.compose.ui.window.Dialog
 import com.example.fitnessapp.ui.theme.FitnessAppTheme
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun AddButton(screen: String){
     var isaddvivsible by remember {
         mutableStateOf(false)
